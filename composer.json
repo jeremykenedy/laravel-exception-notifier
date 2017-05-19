@@ -17,7 +17,5 @@
         "psr-4": {
             "jeremykenedy\\laravelexceptionnotifier\\": "src/"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
