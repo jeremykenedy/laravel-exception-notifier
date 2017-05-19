@@ -71,7 +71,7 @@ Laravel exception notifier will send an email of of the error along with the sta
         }
     ```
 
-6. In `App\Exceptions\Handler.php` the method `sendEmail()`:
+6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
 
     ```
         /**
