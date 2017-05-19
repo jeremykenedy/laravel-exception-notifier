@@ -1,0 +1,23 @@
+{
+    "name": "jeremykenedy/laravel-exception-notifier",
+    "description": "Laravel exception notifier will send an email of of the error along with the stack trace to the chosen recipients.",
+    "keywords": ["laravel", "exception", "notification", "email"],
+    "license": "MIT",
+    "type": "package",
+    "authors": [
+        {
+            "name": "jeremykenedy",
+            "email": "jeremykenedy@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4",
+    },
+    "autoload": {
+        "psr-4": {
+            "jeremykenedy\\laravelexceptionnotifier\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
