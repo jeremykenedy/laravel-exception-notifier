@@ -1,4 +1,4 @@
-# Laravel-Exception-Notifier | A Laravel Excpetions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) | v0.0.2
+# Laravel-Exception-Notifier | A Laravel Excpetions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) | v1.0.0
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
@@ -26,17 +26,74 @@ Laravel exception notifier will send an email of of the error along with the sta
       jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
    ```
 
-3. Publish the packages language files by running the following from your projects root folder:
+3. Publish the packages view, mailer, and config files by running the following from your projects root folder:
 
     ```
         php artisan vendor:publish --tag=laravelexceptionnotifier
     ```
 
-5. Configure your email settings in the `.env` file.
+4. In `App\Exceptions/Handler.php replace the `report()` method with:
 
-5. Add the following (optional) settings to your `.env` file and enter your settings:
+    ```
+        /**
+         * Report or log an exception.
+         *
+         * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+         *
+         * @param  \Exception  $exception
+         * @return void
+         */
+        public function report(Exception $exception)
+        {
 
-    * Note: the defaults for these are located in `config/exception.php`
+            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+
+            if ($enableEmailExceptions === "") {
+                $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
+            }
+
+            if ($enableEmailExceptions) {
+                if ($this->shouldReport($exception)) {
+                    $this->sendEmail($exception);
+                }
+            }
+
+            parent::report($exception);
+        }
+    ```
+
+5. In `App\Exceptions/Handler.php the method `sendEmail()`:
+
+    ```
+        /**
+         * Sends an email upon exception.
+         *
+         * @param  \Exception  $exception
+         * @return void
+         */
+        public function sendEmail(Exception $exception)
+        {
+            try {
+
+                $e = FlattenException::create($exception);
+                $handler = new SymfonyExceptionHandler();
+                $html = $handler->getHtml($e);
+
+                Mail::send(new ExceptionOccured($html));
+
+            } catch (Exception $exception) {
+
+                dd($exception);
+
+            }
+        }
+    ```
+
+6. Configure your email settings in the `.env` file.
+
+7. Add the following (optional) settings to your `.env` file and enter your settings:
+
+    * **Note:** the defaults for these are located in `config/exception.php`
 
     ```
         EMAIL_EXCEPTION_ENABLED=false
@@ -46,6 +103,10 @@ Laravel exception notifier will send an email of of the error along with the sta
         EMAIL_EXCEPTION_BCC=''
         EMAIL_EXCEPTION_SUBJECT=''
     ```
+
+## Screenshots
+
+![Email Notification](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-exception-notifier/exception-error-email-min.jpeg)
 
 ## License
 
