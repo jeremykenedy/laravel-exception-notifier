@@ -32,7 +32,7 @@ Laravel exception notifier will send an email of of the error along with the sta
         php artisan vendor:publish --tag=laravelexceptionnotifier
     ```
 
-4. In `App\Exceptions/Handler.php` include the following classes in the head:
+4. In `App\Exceptions\Handler.php` include the following classes in the head:
 
 ```
     use App\Mail\ExceptionOccured;
@@ -41,7 +41,7 @@ Laravel exception notifier will send an email of of the error along with the sta
     use Symfony\Component\Debug\Exception\FlattenException;
 ```
 
-5. In `App\Exceptions/Handler.php` replace the `report()` method with:
+5. In `App\Exceptions\Handler.php` replace the `report()` method with:
 
     ```
         /**
@@ -71,7 +71,7 @@ Laravel exception notifier will send an email of of the error along with the sta
         }
     ```
 
-6. In `App\Exceptions/Handler.php` the method `sendEmail()`:
+6. In `App\Exceptions\Handler.php` the method `sendEmail()`:
 
     ```
         /**
