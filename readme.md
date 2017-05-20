@@ -119,4 +119,4 @@ Laravel exception notifier will send an email of of the error along with the sta
 
 ## License
 
-Laravel-Exception-Notifier | A Laravel Excpetions Email Notification Package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Laravel-Exception-Notifier | A Laravel Exceptions Email Notification Package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
