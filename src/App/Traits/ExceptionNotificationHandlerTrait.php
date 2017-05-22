@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Mail\ExceptionOccured;
+use Illuminate\Support\Facades\Log;
 use Mail;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -68,7 +69,7 @@ trait ExceptionNotificationHandlerTrait
 
         } catch (Exception $exception) {
 
-            dd($exception);
+            Log::error($exception);
 
         }
     }
