@@ -1,4 +1,4 @@
-# Laravel-Exception-Notifier | A Laravel Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) | v1.0.0
+# Laravel-Exception-Notifier | A Laravel Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
@@ -36,6 +36,7 @@ Laravel exception notifier will send an email of of the error along with the sta
 
 ```
     use App\Mail\ExceptionOccured;
+    use Illuminate\Support\Facades\Log;
     use Mail;
     use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
     use Symfony\Component\Debug\Exception\FlattenException;
@@ -61,10 +62,8 @@ Laravel exception notifier will send an email of of the error along with the sta
                 $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
             }
 
-            if ($enableEmailExceptions) {
-                if ($this->shouldReport($exception)) {
-                    $this->sendEmail($exception);
-                }
+            if ($enableEmailExceptions && $this->shouldReport($exception)) {
+                $this->sendEmail($exception);
             }
 
             parent::report($exception);
@@ -92,7 +91,7 @@ Laravel exception notifier will send an email of of the error along with the sta
 
             } catch (Exception $exception) {
 
-                dd($exception);
+                Log::error($exception);
 
             }
         }
