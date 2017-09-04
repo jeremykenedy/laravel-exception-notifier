@@ -17,5 +17,15 @@
         "psr-4": {
             "jeremykenedy\\laravelexceptionnotifier\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "jeremykenedy\\laravelexceptionnotifier\\LaravelExceptionNotifier"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

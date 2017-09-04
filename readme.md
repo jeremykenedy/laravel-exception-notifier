@@ -6,11 +6,11 @@
 
 ## Introduction
 
-Laravel exception notifier will send an email of of the error along with the stack trace to the chosen recipients. [This Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) includes all necessary traits, views, configs, and Mailers for email notifications upon your applications exceptions. You can customize who send to, cc to, bcc to, enable/disable, and custom subject or default subject based on environment. Built for Laravel 5.2, 5.3, and 5.4+.
+Laravel exception notifier will send an email of of the error along with the stack trace to the chosen recipients. [This Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) includes all necessary traits, views, configs, and Mailers for email notifications upon your applications exceptions. You can customize who send to, cc to, bcc to, enable/disable, and custom subject or default subject based on environment. Built for Laravel 5.2, 5.3, 5.4, 5.5+.
 
 ## Requirements
 
-* [Laravel 5.2, 5.3, or 5.4 or newer](https://laravel.com/docs/installation)
+* [Laravel 5.2, 5.3, 5.4, or 5.5+](https://laravel.com/docs/installation)
 
 ## Installation
 
@@ -20,7 +20,12 @@ Laravel exception notifier will send an email of of the error along with the sta
         composer require jeremykenedy/laravel-exception-notifier
     ```
 
-2. Register the package with laravel in `config/app.php` under `providers` with the following:
+2. Register the package
+* Laravel 5.5 and up
+Uses package auto discovery feature, no need to edit the `config/app.php` file.
+
+* Laravel 5.4 and below
+Register the package with laravel in `config/app.php` under `providers` with the following:
 
    ```
       jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
