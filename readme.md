@@ -2,7 +2,7 @@
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
-[![License](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/license.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Introduction
 
