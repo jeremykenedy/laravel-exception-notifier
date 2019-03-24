@@ -5,12 +5,11 @@ namespace App\Traits;
 use App\Mail\ExceptionOccured;
 use Illuminate\Support\Facades\Log;
 use Mail;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 
 trait ExceptionNotificationHandlerTrait
 {
-
     /**
      * A list of the exception types that should not be reported.
      *
@@ -30,15 +29,15 @@ trait ExceptionNotificationHandlerTrait
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
+     *
      * @return void
      */
     public function report(Exception $exception)
     {
-
         $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 
-        if ($enableEmailExceptions === "") {
+        if ($enableEmailExceptions === '') {
             $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
         }
 
@@ -54,25 +53,20 @@ trait ExceptionNotificationHandlerTrait
     /**
      * Sends an email upon exception.
      *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
+     *
      * @return void
      */
     public function sendEmail(Exception $exception)
     {
         try {
-
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
 
             Mail::send(new ExceptionOccured($html));
-
         } catch (Exception $exception) {
-
             Log::error($exception);
-
         }
     }
-
-
 }

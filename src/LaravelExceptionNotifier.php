@@ -28,7 +28,6 @@ class LaravelExceptionNotifier extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/exceptions.php' => config_path('exceptions.php'),
         ], 'laravelexceptionnotifier');
-
     }
 
     /**
@@ -38,6 +37,5 @@ class LaravelExceptionNotifier extends ServiceProvider
      */
     public function register()
     {
-
     }
 }
