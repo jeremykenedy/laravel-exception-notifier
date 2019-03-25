@@ -1,7 +1,12 @@
 {
     "name": "jeremykenedy/laravel-exception-notifier",
     "description": "Laravel exception notifier will send an email of of the error along with the stack trace to the chosen recipients.",
-    "keywords": ["laravel", "exception", "notification", "email"],
+    "keywords": [
+        "laravel",
+        "exception",
+        "notification",
+        "email"
+    ],
     "license": "MIT",
     "type": "package",
     "authors": [
