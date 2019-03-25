@@ -5,7 +5,14 @@
         "laravel",
         "exception",
         "notification",
-        "email"
+        "email",
+        "email-notifications",
+        "email-notification",
+        "laravel-exceptions",
+        "exception-handler",
+        "exception-email",
+        "exception-emails",
+        "exception-messages"
     ],
     "license": "MIT",
     "type": "package",
@@ -18,9 +25,20 @@
     "require": {
         "php": ">=5.6.4"
     },
+    "require-dev": {
+        "illuminate/support": "^5.8",
+        "orchestra/testbench": "~3.0",
+        "phpunit/phpunit": "^7.5",
+        "laravel/laravel": "5.8.*"
+    },
     "autoload": {
         "psr-4": {
             "jeremykenedy\\laravelexceptionnotifier\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "jeremykenedy\\laravelexceptionnotifier\\Test\\": "tests/"
         }
     },
     "extra": {
@@ -32,5 +50,7 @@
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

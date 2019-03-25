@@ -1,0 +1,37 @@
+language: php
+sudo: required
+dist: trusty
+group: edge
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+sudo: false
+
+services:
+  - mysql
+
+before_script:
+  - mysql -u root -e 'create database laravelexceptionnotifier;'
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install
+  - composer create-project --prefer-dist laravel/laravel laravelexceptionnotifier
+  - cp .env.travis laravelexceptionnotifier/.env
+  - cd laravelexceptionnotifier
+  - composer self-update
+  - composer install --prefer-source --no-interaction
+  - composer dump-autoload
+  - composer require jeremykenedy/laravel-exception-notifier
+  - php artisan key:generate
+  - php artisan vendor:publish --tag=laravelexceptionnotifier
+  - php artisan make:auth
+  - composer dump-autoload
+  - php artisan clear-compiled
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
