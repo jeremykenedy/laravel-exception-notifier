@@ -49,17 +49,17 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 4. In `App\Exceptions\Handler.php` include the following classes in the head:
 
-```
+    ```php
     use App\Mail\ExceptionOccured;
     use Illuminate\Support\Facades\Log;
     use Mail;
     use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
     use Symfony\Component\Debug\Exception\FlattenException;
-```
+    ```
 
 5. In `App\Exceptions\Handler.php` replace the `report()` method with:
 
-    ```
+    ```php
         /**
          * Report or log an exception.
          *
@@ -87,7 +87,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
 
-    ```
+    ```php
         /**
          * Sends an email upon exception.
          *
