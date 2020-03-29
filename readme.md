@@ -1,4 +1,4 @@
-# Laravel Exception Notifier | A Laravel Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+# Laravel Exception Notifier | A Laravel 5, 6, and 7 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
@@ -21,13 +21,21 @@ Laravel exception notifier will send an email of the error along with the stack 
 Get the errors and fix them before the client even reports them, that's why this exists!
 
 ## Requirements
-* [Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8+](https://laravel.com/docs/installation)
+* [Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, & 7+](https://laravel.com/docs/installation)
 
 ## Installation Instructions
 1. From your projects root folder in terminal run:
 
+    Laravel 7+ use:
+
     ```
         composer require jeremykenedy/laravel-exception-notifier
+    ```
+
+    Laravel 6 and below use:
+
+    ```
+        composer require jeremykenedy/laravel-exception-notifier:1.2.0
     ```
 
 2. Register the package
@@ -47,69 +55,66 @@ Register the package with laravel in `config/app.php` under `providers` with the
         php artisan vendor:publish --tag=laravelexceptionnotifier
     ```
 
-4. In `App\Exceptions\Handler.php` include the following classes in the head:
+4. In `App\Exceptions\Handler.php` include the additional following classes in the head:
 
 ```
     use App\Mail\ExceptionOccured;
     use Illuminate\Support\Facades\Log;
     use Mail;
-    use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
     use Symfony\Component\Debug\Exception\FlattenException;
+    use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 ```
 
 5. In `App\Exceptions\Handler.php` replace the `report()` method with:
 
     ```
-        /**
-         * Report or log an exception.
-         *
-         * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-         *
-         * @param  \Exception  $exception
-         * @return void
-         */
-        public function report(Exception $exception)
-        {
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param \Throwable $exception
+     *
+     * @return void
+     */
+    public function report(Throwable $exception)
+    {
+        $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
-
-            if ($enableEmailExceptions === "") {
-                $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
-            }
-
-            if ($enableEmailExceptions && $this->shouldReport($exception)) {
-                $this->sendEmail($exception);
-            }
-
-            parent::report($exception);
+        if ($enableEmailExceptions === '') {
+            $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
         }
+
+        if ($enableEmailExceptions && $this->shouldReport($exception)) {
+            $this->sendEmail($exception);
+        }
+
+        parent::report($exception);
+    }
     ```
 
 6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
 
     ```
-        /**
-         * Sends an email upon exception.
-         *
-         * @param  \Exception  $exception
-         * @return void
-         */
-        public function sendEmail(Exception $exception)
-        {
-            try {
+    /**
+     * Sends an email upon exception.
+     *
+     * @param \Throwable $exception
+     *
+     * @return void
+     */
+    public function sendEmail(Throwable $exception)
+    {
+        try {
+            $e = FlattenException::create($exception);
+            $handler = new SymfonyExceptionHandler();
+            $html = $handler->getHtml($e);
 
-                $e = FlattenException::create($exception);
-                $handler = new SymfonyExceptionHandler();
-                $html = $handler->getHtml($e);
-
-                Mail::send(new ExceptionOccured($html));
-
-            } catch (Exception $exception) {
-
-                Log::error($exception);
-
-            }
+            Mail::send(new ExceptionOccured($html));
+        } catch (Throwable $exception) {
+            Log::error($exception);
         }
+    }
     ```
 
 7. Configure your email settings in the `.env` file.
