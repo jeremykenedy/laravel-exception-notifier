@@ -16,25 +16,25 @@ Table of contents:
 - [License](#license)
 
 ## About
-Laravel exception notifier will send an email of the error along with the stack trace to the chosen recipients. [This Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) includes all necessary traits, views, configs, and Mailers for email notifications upon your applications exceptions. You can customize who send to, cc to, bcc to, enable/disable, and custom subject or default subject based on environment. Built for Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, and 5.8+.
+Laravel exception notifier will send an email of the error along with the stack trace to the chosen recipients. [This Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) includes all necessary traits, views, configs, and Mailers for email notifications upon your applications exceptions. You can customize who send to, cc to, bcc to, enable/disable, and custom subject or default subject based on environment. Built for Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, and 7+.
 
 Get the errors and fix them before the client even reports them, that's why this exists!
 
 ## Requirements
-* [Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, & 7+](https://laravel.com/docs/installation)
+* [Laravel 5.2+, 6, or 7+](https://laravel.com/docs/installation)
 
 ## Installation Instructions
 1. From your projects root folder in terminal run:
 
     Laravel 7+ use:
 
-    ```
+    ```bash
         composer require jeremykenedy/laravel-exception-notifier
     ```
 
     Laravel 6 and below use:
 
-    ```
+    ```bash
         composer require jeremykenedy/laravel-exception-notifier:1.2.0
     ```
 
@@ -45,19 +45,19 @@ Uses package auto discovery feature, no need to edit the `config/app.php` file.
 * Laravel 5.4 and below
 Register the package with laravel in `config/app.php` under `providers` with the following:
 
-   ```
+   ```php
       jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
    ```
 
 3. Publish the packages view, mailer, and config files by running the following from your projects root folder:
 
-    ```
+    ```bash
         php artisan vendor:publish --tag=laravelexceptionnotifier
     ```
 
 4. In `App\Exceptions\Handler.php` include the additional following classes in the head:
 
-```
+```php
     use App\Mail\ExceptionOccured;
     use Illuminate\Support\Facades\Log;
     use Mail;
@@ -67,7 +67,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 5. In `App\Exceptions\Handler.php` replace the `report()` method with:
 
-    ```
+    ```php
     /**
      * Report or log an exception.
      *
@@ -95,7 +95,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
 
-    ```
+    ```php
     /**
      * Sends an email upon exception.
      *
@@ -123,9 +123,9 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
     * **Note:** the defaults for these are located in `config/exception.php`
 
-    ```
+    ```bash
         EMAIL_EXCEPTION_ENABLED=false
-        EMAIL_EXCEPTION_FROM='email@email.com'
+        EMAIL_EXCEPTION_FROM="${MAIL_FROM_ADDRESS}"
         EMAIL_EXCEPTION_TO='email1@gmail.com, email2@gmail.com'
         EMAIL_EXCEPTION_CC=''
         EMAIL_EXCEPTION_BCC=''
