@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Mail;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
+use Throwable;
 
 trait ExceptionNotificationHandlerTrait
 {
@@ -29,11 +30,11 @@ trait ExceptionNotificationHandlerTrait
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param \Exception $exception
+     * @param \Throwable $exception
      *
      * @return void
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 
@@ -53,11 +54,11 @@ trait ExceptionNotificationHandlerTrait
     /**
      * Sends an email upon exception.
      *
-     * @param \Exception $exception
+     * @param \Throwable $exception
      *
      * @return void
      */
-    public function sendEmail(Exception $exception)
+    public function sendEmail(Throwable $exception)
     {
         try {
             $e = FlattenException::create($exception);
@@ -65,7 +66,7 @@ trait ExceptionNotificationHandlerTrait
             $html = $handler->getHtml($e);
 
             Mail::send(new ExceptionOccured($html));
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             Log::error($exception);
         }
     }
