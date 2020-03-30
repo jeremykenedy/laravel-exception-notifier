@@ -4,6 +4,8 @@
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Build Status](https://travis-ci.org/jeremykenedy/laravel-exception-notifier.svg?branch=master)](https://travis-ci.org/jeremykenedy/laravel-exception-notifier)
 [![StyleCI](https://github.styleci.io/repos/91833181/shield?branch=master)](https://github.styleci.io/repos/91833181)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/?branch=master)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 [![MadeWithLaravel.com shield](https://madewithlaravel.com/storage/repo-shields/1350-shield.svg)](https://madewithlaravel.com/p/laravel-exception-notifier/shield-link)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
