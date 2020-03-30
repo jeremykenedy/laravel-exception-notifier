@@ -6,7 +6,7 @@ use App\Mail\ExceptionOccured;
 use Illuminate\Support\Facades\Log;
 use Mail;
 use Symfony\Component\Debug\Exception\FlattenException;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
+use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyExceptionHandler;
 use Throwable;
 
 trait ExceptionNotificationHandlerTrait
