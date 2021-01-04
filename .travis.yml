@@ -6,6 +6,7 @@ group: edge
 php:
   - 7.2.5
   - 7.3
+  - 7.4
 
 sudo: false
 
@@ -29,9 +30,3 @@ before_script:
   - php artisan ui vue --auth
   - composer dump-autoload
   - php artisan clear-compiled
-
-before_install:
-  - travis_retry composer self-update
-
-install:
-  - travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
