@@ -1,3 +1,4 @@
+  
 language: php
 sudo: required
 dist: trusty
@@ -30,3 +31,11 @@ before_script:
   - php artisan ui vue --auth
   - composer dump-autoload
   - php artisan clear-compiled
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+
+script: vendor/bin/phpunit
