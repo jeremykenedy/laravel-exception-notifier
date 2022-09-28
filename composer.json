@@ -23,13 +23,13 @@
         }
     ],
     "require": {
-        "php": "^7.2|^8.0"
+        "php": "^8.0"
     },
     "require-dev": {
         "illuminate/support": "^6.0.2",
         "orchestra/testbench": "^3.8.5",
         "phpunit/phpunit": "^8.3.4",
-        "laravel/framework": "6.*|7.*|8.*"
+        "laravel/framework": "9.*"
     },
     "autoload": {
         "psr-4": {

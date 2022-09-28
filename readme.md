@@ -1,4 +1,4 @@
-# Laravel Exception Notifier | A Laravel 5, 6, 7, and 8 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+# Laravel Exception Notifier | A Laravel 5, 6, 7, 8, and 9 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
@@ -28,10 +28,16 @@ Get the errors and fix them before the client even reports them, that's why this
 ## Installation Instructions
 1. From your projects root folder in terminal run:
 
-    Laravel 7+ use:
+    Laravel 9+ use:
 
     ```bash
         composer require jeremykenedy/laravel-exception-notifier
+    ```
+
+    Laravel 7-8 use:
+
+    ```bash
+        composer require jeremykenedy/laravel-exception-notifier:2.2.0
     ```
 
     Laravel 6 and below use:
@@ -47,17 +53,35 @@ Uses package auto discovery feature, no need to edit the `config/app.php` file.
 * Laravel 5.4 and below
 Register the package with laravel in `config/app.php` under `providers` with the following:
 
-   ```php
-      jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
-   ```
+```php
+    jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
+```
 
 3. Publish the packages view, mailer, and config files by running the following from your projects root folder:
 
-    ```bash
-        php artisan vendor:publish --tag=laravelexceptionnotifier
-    ```
+```bash
+    php artisan vendor:publish --tag=laravelexceptionnotifier
+```
+
+#### NOTE: If upgrading to Laravel 9 from an older version of this package you will need to republish the assets with:
+
+```bash
+    php artisan vendor:publish --force --tag=laravelexceptionnotifier
+```
 
 4. In `App\Exceptions\Handler.php` include the additional following classes in the head:
+
+#### Laravel 9 and Above use:
+
+```php
+    use App\Mail\ExceptionOccured;
+    use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+    use Illuminate\Support\Facades\Log;
+    use Mail;
+    use Throwable;
+```
+
+#### Laravel 8 and Below use:
 
 ```php
     use App\Mail\ExceptionOccured;
@@ -67,9 +91,29 @@ Register the package with laravel in `config/app.php` under `providers` with the
     use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 ```
 
-5. In `App\Exceptions\Handler.php` replace the `report()` method with:
+5. Update `App\Exceptions\Handler.php`
 
-    ```php
+#### Laravel 9 and Above:
+##### In `App\Exceptions\Handler.php` replace the `register()` method with:
+
+```php
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->reportable(function (Throwable $e) {
+            $this->sendEmail($e);
+        });
+    }
+```
+
+#### Laravel 8 and Below:
+##### In `App\Exceptions\Handler.php` replace the `report()` method with:
+
+```php
     /**
      * Report or log an exception.
      *
@@ -93,11 +137,40 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
         parent::report($exception);
     }
-    ```
+```
 
 6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
 
-    ```php
+#### Laravel 9 and Above:
+
+```php
+    /**
+     * Sends an email upon exception.
+     *
+     * @param \Throwable $exception
+     *
+     * @return void
+     */
+    public function sendEmail(Throwable $exception)
+    {
+       try {
+            $content['message'] = $exception->getMessage();
+            $content['file'] = $exception->getFile();
+            $content['line'] = $exception->getLine();
+            $content['trace'] = $exception->getTrace();
+            $content['url'] = request()->url();
+            $content['body'] = request()->all();
+            $content['ip'] = request()->ip();
+            Mail::send(new ExceptionOccured($content));
+        } catch (Throwable $exception) {
+            Log::error($exception);
+        }
+    }
+```
+
+#### Laravel 8 and Below:
+
+```php
     /**
      * Sends an email upon exception.
      *
@@ -117,7 +190,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
             Log::error($exception);
         }
     }
-    ```
+```
 
 7. Configure your email settings in the `.env` file.
 
@@ -125,14 +198,14 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
     * **Note:** the defaults for these are located in `config/exception.php`
 
-    ```bash
+```bash
         EMAIL_EXCEPTION_ENABLED=false
         EMAIL_EXCEPTION_FROM="${MAIL_FROM_ADDRESS}"
         EMAIL_EXCEPTION_TO='email1@gmail.com, email2@gmail.com'
         EMAIL_EXCEPTION_CC=''
         EMAIL_EXCEPTION_BCC=''
         EMAIL_EXCEPTION_SUBJECT=''
-    ```
+```
 
 ## Screenshots
 ![Email Notification](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-exception-notifier/exception-error-email-min.jpeg)
