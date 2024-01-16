@@ -28,9 +28,6 @@ trait ExceptionNotificationHandlerTrait
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param Throwable $exception
-     * @return void
      */
     public function report(Throwable $e): void
     {
@@ -51,11 +48,8 @@ trait ExceptionNotificationHandlerTrait
 
     /**
      * Sends an email upon exception.
-     *
-     * @param Throwable $exception
-     * @return void
      */
-    public function sendEmail(Throwable $exception)
+    public function sendEmail(Throwable $exception): void
     {
         try {
             $hasDebugModeEnabled = app()->hasDebugModeEnabled();
