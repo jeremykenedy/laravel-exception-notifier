@@ -77,11 +77,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 #### Laravel 9 and Above use:
 
 ```php
-    use App\Mail\ExceptionOccurred;
-    use Illuminate\Support\Facades\Log;
-    use Illuminate\Support\Facades\Mail;
-    use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
-    use Throwable;
+    use App\Traits\ExceptionNotificationHandlerTrait;
 ```
 
 #### Laravel 8 and Below use:
@@ -97,24 +93,15 @@ Register the package with laravel in `config/app.php` under `providers` with the
 5. Update `App\Exceptions\Handler.php`
 
 #### Laravel 9 and Above:
-##### In `App\Exceptions\Handler.php` replace the `register()` method with:
 
+##### Add trait to `Handler` class:
 ```php
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->reportable(function (Throwable $e) {
-            $this->sendEmail($e);
-        });
-    }
+    use ExceptionNotificationHandlerTrait;
 ```
 
 #### Laravel 8 and Below:
-##### In `App\Exceptions\Handler.php` replace the `report()` method with:
+
+##### Replace the `report()` method with:
 
 ```php
     /**
@@ -142,37 +129,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
     }
 ```
 
-6. In `App\Exceptions\Handler.php` add the method `sendEmail()`:
-
-#### Laravel 9 and Above:
-
-```php
-    /**
-     * Sends an email upon exception.
-     *
-     * @param Throwable $exception
-     *
-     * @return void
-     */
-    public function sendEmail(Throwable $exception)
-    {
-       try {
-            $content['message'] = $exception->getMessage();
-            $content['file'] = $exception->getFile();
-            $content['line'] = $exception->getLine();
-            $content['trace'] = $exception->getTrace();
-            $content['url'] = request()->url();
-            $content['body'] = request()->all();
-            $content['ip'] = request()->ip();
-            Mail::send(new ExceptionOccurred($content));
-        } catch (Throwable $exception) {
-            Log::error($exception);
-        }
-    }
-```
-
-#### Laravel 8 and Below:
-
+##### Add the method `sendEmail()`:
 ```php
     /**
      * Sends an email upon exception.
@@ -195,9 +152,9 @@ Register the package with laravel in `config/app.php` under `providers` with the
     }
 ```
 
-7. Configure your email settings in the `.env` file.
+6. Configure your email settings in the `.env` file.
 
-8. Add the following (optional) settings to your `.env` file and enter your settings:
+7. Add the following (optional) settings to your `.env` file and enter your settings:
 
     * **Note:** the defaults for these are located in `config/exception.php`
 
