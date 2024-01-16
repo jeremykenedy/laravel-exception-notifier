@@ -1,4 +1,4 @@
-  
+
 language: php
 sudo: required
 dist: trusty
@@ -16,7 +16,7 @@ services:
 
 before_script:
   - mysql -u root -e 'create database laravelexceptionnotifier;'
-  - curl -s http://getcomposer.org/installer | php
+  - curl -s https://getcomposer.org/installer | php
   - php composer.phar install
   - composer create-project --prefer-dist laravel/laravel laravelexceptionnotifier
   - cp .env.travis laravelexceptionnotifier/.env
