@@ -78,9 +78,9 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 ```php
     use App\Mail\ExceptionOccurred;
-    use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
     use Illuminate\Support\Facades\Log;
-    use Mail;
+    use Illuminate\Support\Facades\Mail;
+    use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
     use Throwable;
 ```
 
@@ -150,7 +150,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
     /**
      * Sends an email upon exception.
      *
-     * @param \Throwable $exception
+     * @param Throwable $exception
      *
      * @return void
      */
