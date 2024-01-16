@@ -5,8 +5,7 @@ namespace App\Traits;
 use App\Mail\ExceptionOccurred;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyExceptionHandler;
-use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Throwable;
 
 trait ExceptionNotificationHandlerTrait
@@ -59,9 +58,9 @@ trait ExceptionNotificationHandlerTrait
     public function sendEmail(Throwable $exception)
     {
         try {
-            $e = FlattenException::create($exception);
-            $handler = new SymfonyExceptionHandler();
-            $html = $handler->getHtml($e);
+            $hasDebugModeEnabled = app()->hasDebugModeEnabled();
+            $renderer = new HtmlErrorRenderer($hasDebugModeEnabled);
+            $html = $renderer->render($exception);
 
             Mail::send(new ExceptionOccurred($html));
         } catch (Throwable $exception) {
