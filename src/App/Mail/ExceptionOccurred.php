@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ExceptionOccured extends Mailable
+class ExceptionOccurred extends Mailable
 {
     use Queueable, SerializesModels;
 

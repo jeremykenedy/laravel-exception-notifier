@@ -77,7 +77,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
 #### Laravel 9 and Above use:
 
 ```php
-    use App\Mail\ExceptionOccured;
+    use App\Mail\ExceptionOccurred;
     use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
     use Illuminate\Support\Facades\Log;
     use Mail;
@@ -164,7 +164,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
             $content['url'] = request()->url();
             $content['body'] = request()->all();
             $content['ip'] = request()->ip();
-            Mail::send(new ExceptionOccured($content));
+            Mail::send(new ExceptionOccurred($content));
         } catch (Throwable $exception) {
             Log::error($exception);
         }
@@ -224,7 +224,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
         ├── .env.example
         ├── App
         │   ├── Mail
-        │   │   └── ExceptionOccured.php
+        │   │   └── ExceptionOccurred.php
         │   └── Traits
         │       └── ExceptionNotificationHandlerTrait.php
         ├── LaravelExceptionNotifier.php
