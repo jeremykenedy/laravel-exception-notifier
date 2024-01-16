@@ -32,7 +32,7 @@ trait ExceptionNotificationHandlerTrait
      * @param Throwable $exception
      * @return void
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e): void
     {
         $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 
@@ -41,12 +41,12 @@ trait ExceptionNotificationHandlerTrait
         }
 
         if ($enableEmailExceptions) {
-            if ($this->shouldReport($exception)) {
-                $this->sendEmail($exception);
+            if ($this->shouldReport($e)) {
+                $this->sendEmail($e);
             }
         }
 
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
