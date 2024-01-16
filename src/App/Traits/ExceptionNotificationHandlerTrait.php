@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Mail\ExceptionOccurred;
 use Illuminate\Support\Facades\Log;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyExceptionHandler;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Throwable;
