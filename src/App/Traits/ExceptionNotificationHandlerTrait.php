@@ -5,8 +5,8 @@ namespace App\Traits;
 use App\Mail\ExceptionOccurred;
 use Illuminate\Support\Facades\Log;
 use Mail;
-use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyExceptionHandler;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Throwable;
 
 trait ExceptionNotificationHandlerTrait
