@@ -10,9 +10,7 @@ return [
     | Enable/Disable exception email notifications
     |
     */
-
-    'emailExceptionEnabled'        => env('EMAIL_EXCEPTION_ENABLED'),
-    'emailExceptionEnabledDefault' => true,
+    'emailExceptionEnabled' => env('EMAIL_EXCEPTION_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,9 +20,7 @@ return [
     | This is the email your exception will be from.
     |
     */
-
-    'emailExceptionFrom'        => env('EMAIL_EXCEPTION_FROM'),
-    'emailExceptionFromDefault' => 'email@email.com',
+    'emailExceptionFrom' => env('EMAIL_EXCEPTION_FROM', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,9 +30,7 @@ return [
     | This is the email(s) the exceptions will be emailed to.
     |
     */
-
-    'emailExceptionsTo'        => env('EMAIL_EXCEPTION_TO'),
-    'emailExceptionsToDefault' => 'email@email.com',
+    'emailExceptionsTo' => env('EMAIL_EXCEPTION_TO', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,9 +40,7 @@ return [
     | This is the email(s) the exceptions will be CC emailed to.
     |
     */
-
-    'emailExceptionCCto'        => env('EMAIL_EXCEPTION_CC'),
-    'emailExceptionCCtoDefault' => [],
+    'emailExceptionCCto' => env('EMAIL_EXCEPTION_CC', []),
 
     /*
     |--------------------------------------------------------------------------
@@ -58,9 +50,7 @@ return [
     | This is the email(s) the exceptions will be BCC emailed to.
     |
     */
-
-    'emailExceptionBCCto'        => env('EMAIL_EXCEPTION_BCC'),
-    'emailExceptionBCCtoDefault' => [],
+    'emailExceptionBCCto' => env('EMAIL_EXCEPTION_BCC', []),
 
     /*
     |--------------------------------------------------------------------------
@@ -70,9 +60,7 @@ return [
     | This is the subject of the exception email
     |
     */
-
-    'emailExceptionSubject'        => env('EMAIL_EXCEPTION_SUBJECT'),
-    'emailExceptionSubjectDefault' => 'Error on '.config('app.env'),
+    'emailExceptionSubject' => env('EMAIL_EXCEPTION_SUBJECT', 'Error on ' . config('app.env')),
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +70,6 @@ return [
     | This is the view that will be used for the email.
     |
     */
-
     'emailExceptionView' => 'emails.exception',
 
 ];
