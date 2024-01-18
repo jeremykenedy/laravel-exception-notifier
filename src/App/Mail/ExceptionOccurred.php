@@ -10,12 +10,10 @@ class ExceptionOccurred extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $content;
+    private array $content;
 
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
     public function __construct($content)
     {
@@ -24,10 +22,8 @@ class ExceptionOccurred extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): Mailable
     {
         $emailsTo = str_getcsv(config('exceptions.emailExceptionsTo'), ',');
         $ccEmails = str_getcsv(config('exceptions.emailExceptionCCto'), ',');
