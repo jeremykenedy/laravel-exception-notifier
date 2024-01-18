@@ -25,9 +25,9 @@ class ExceptionOccurred extends Mailable
      */
     public function build(): Mailable
     {
-        $emailsTo = str_getcsv(config('exceptions.emailExceptionsTo'), ',');
-        $ccEmails = str_getcsv(config('exceptions.emailExceptionCCto'), ',');
-        $bccEmails = str_getcsv(config('exceptions.emailExceptionBCCto'), ',');
+        $emailsTo = str_getcsv(config('exceptions.emailExceptionsTo'));
+        $ccEmails = str_getcsv(config('exceptions.emailExceptionCCto'));
+        $bccEmails = str_getcsv(config('exceptions.emailExceptionBCCto'));
         $fromSender = config('exceptions.emailExceptionFrom');
         $subject = config('exceptions.emailExceptionSubject');
 
