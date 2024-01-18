@@ -77,7 +77,10 @@ Register the package with laravel in `config/app.php` under `providers` with the
 #### Laravel 9 and Above use:
 
 ```php
-    use App\Traits\ExceptionNotificationHandlerTrait;
+    use App\Mail\ExceptionOccurred;
+    use Illuminate\Support\Facades\Log;
+    use Illuminate\Support\Facades\Mail;
+    use Throwable;
 ```
 
 #### Laravel 8 and Below use:
@@ -94,9 +97,46 @@ Register the package with laravel in `config/app.php` under `providers` with the
 
 #### Laravel 9 and Above:
 
-##### Add trait to `Handler` class:
+##### Add the `sendEmail()` method:
 ```php
-    use ExceptionNotificationHandlerTrait;
+    /**
+     * Sends an email upon exception.
+     */
+    public function sendEmail(Throwable $exception): void
+    {
+        try {
+            $content = [
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTrace(),
+                'url' => request()->url(),
+                'body' => request()->all(),
+                'ip' => request()->ip(),
+            ];
+
+            Mail::send(new ExceptionOccurred($content));
+        } catch (Throwable $exception) {
+            Log::error($exception);
+        }
+    }
+```
+
+##### Add or update the `register()` method:
+```php
+    /**
+     * Register the exception handling callbacks for the application.
+     */
+    public function register(): void
+    {
+        $this->reportable(function (Throwable $e) {
+            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+
+            if ($enableEmailExceptions && $this->shouldReport($e)) {
+                $this->sendEmail($e);
+            }
+        });
+    }
 ```
 
 #### Laravel 8 and Below:
