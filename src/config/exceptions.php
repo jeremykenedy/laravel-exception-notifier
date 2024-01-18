@@ -20,7 +20,7 @@ return [
     | This is the email your exception will be from.
     |
     */
-    'emailExceptionFrom' => env('EMAIL_EXCEPTION_FROM', ''),
+    'emailExceptionFrom' => env('EMAIL_EXCEPTION_FROM'),
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return [
     | This is the email(s) the exceptions will be emailed to.
     |
     */
-    'emailExceptionsTo' => env('EMAIL_EXCEPTION_TO', ''),
+    'emailExceptionsTo' => env('EMAIL_EXCEPTION_TO'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     | This is the email(s) the exceptions will be CC emailed to.
     |
     */
-    'emailExceptionCCto' => env('EMAIL_EXCEPTION_CC', ''),
+    'emailExceptionCCto' => env('EMAIL_EXCEPTION_CC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return [
     | This is the email(s) the exceptions will be BCC emailed to.
     |
     */
-    'emailExceptionBCCto' => env('EMAIL_EXCEPTION_BCC', ''),
+    'emailExceptionBCCto' => env('EMAIL_EXCEPTION_BCC'),
 
     /*
     |--------------------------------------------------------------------------
