@@ -130,7 +130,7 @@ Register the package with laravel in `config/app.php` under `providers` with the
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+            $enableEmailExceptions = config('emailExceptionEnabled');
 
             if ($enableEmailExceptions && $this->shouldReport($e)) {
                 $this->sendEmail($e);

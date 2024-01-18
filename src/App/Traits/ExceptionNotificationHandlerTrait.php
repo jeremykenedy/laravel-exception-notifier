@@ -29,7 +29,7 @@ trait ExceptionNotificationHandlerTrait
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabled', true);
+            $enableEmailExceptions = config('emailExceptionEnabled');
 
             if ($enableEmailExceptions && $this->shouldReport($e)) {
                 $this->sendEmail($e);
