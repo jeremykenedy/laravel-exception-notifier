@@ -24,27 +24,17 @@ trait ExceptionNotificationHandlerTrait
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @return void
+     * Register the exception handling callbacks for the application.
      */
-    public function report(Throwable $e)
+    public function register(): void
     {
-        $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+        $this->reportable(function (Throwable $e) {
+            $enableEmailExceptions = config('exceptions.emailExceptionEnabled', true);
 
-        if ($enableEmailExceptions === '') {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
-        }
-
-        if ($enableEmailExceptions) {
-            if ($this->shouldReport($e)) {
+            if ($enableEmailExceptions && $this->shouldReport($e)) {
                 $this->sendEmail($e);
             }
-        }
-
-        parent::report($e);
+        });
     }
 
     /**
