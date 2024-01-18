@@ -45,12 +45,12 @@ trait ExceptionNotificationHandlerTrait
         try {
             $content = [
                 'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => $exception->getTrace(),
-                'url' => request()->url(),
-                'body' => request()->all(),
-                'ip' => request()->ip(),
+                'file'    => $exception->getFile(),
+                'line'    => $exception->getLine(),
+                'trace'   => $exception->getTrace(),
+                'url'     => request()->url(),
+                'body'    => request()->all(),
+                'ip'      => request()->ip(),
             ];
 
             Mail::send(new ExceptionOccurred($content));
