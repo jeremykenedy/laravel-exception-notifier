@@ -58,7 +58,7 @@ class ExceptionOccurred extends Mailable
         return new Content(
             view: $view,
             with: [
-                'content' => $this->content
+                'content' => $this->content,
             ]
         );
     }
