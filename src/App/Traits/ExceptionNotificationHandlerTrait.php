@@ -2,11 +2,9 @@
 
 namespace App\Traits;
 
-use App\Mail\ExceptionOccured;
+use App\Mail\ExceptionOccurred;
 use Illuminate\Support\Facades\Log;
-use Mail;
-use Symfony\Component\Debug\Exception\FlattenException;
-use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyExceptionHandler;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 trait ExceptionNotificationHandlerTrait
@@ -26,44 +24,36 @@ trait ExceptionNotificationHandlerTrait
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Throwable  $exception
-     * @return void
+     * Register the exception handling callbacks for the application.
      */
-    public function report(Throwable $exception)
+    public function register(): void
     {
-        $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+        $this->reportable(function (Throwable $e) {
+            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 
-        if ($enableEmailExceptions === '') {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
-        }
-
-        if ($enableEmailExceptions) {
-            if ($this->shouldReport($exception)) {
-                $this->sendEmail($exception);
+            if ($enableEmailExceptions) {
+                $this->sendEmail($e);
             }
-        }
-
-        parent::report($exception);
+        });
     }
 
     /**
      * Sends an email upon exception.
-     *
-     * @param  \Throwable  $exception
-     * @return void
      */
-    public function sendEmail(Throwable $exception)
+    public function sendEmail(Throwable $exception): void
     {
         try {
-            $e = FlattenException::create($exception);
-            $handler = new SymfonyExceptionHandler();
-            $html = $handler->getHtml($e);
+            $content = [
+                'message' => $exception->getMessage(),
+                'file'    => $exception->getFile(),
+                'line'    => $exception->getLine(),
+                'trace'   => $exception->getTrace(),
+                'url'     => request()->url(),
+                'body'    => request()->all(),
+                'ip'      => request()->ip(),
+            ];
 
-            Mail::send(new ExceptionOccured($html));
+            Mail::send(new ExceptionOccurred($content));
         } catch (Throwable $exception) {
             Log::error($exception);
         }

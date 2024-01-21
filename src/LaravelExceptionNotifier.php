@@ -48,7 +48,7 @@ class LaravelExceptionNotifier extends ServiceProvider
 
         // Publish Mailer
         $this->publishes([
-            __DIR__.'/App/Mail/ExceptionOccured.php' => app_path('Mail/ExceptionOccured.php'),
+            __DIR__.'/App/Mail/ExceptionOccurred.php' => app_path('Mail/ExceptionOccurred.php'),
         ], $publishTag);
 
         // Publish email view

@@ -1,13 +1,13 @@
-  
+
 language: php
 sudo: required
 dist: trusty
 group: edge
 
 php:
-  - 7.2.5
-  - 7.3
-  - 7.4
+  - 8.0
+  - 8.1
+  - 8.2
 
 sudo: false
 
@@ -16,7 +16,7 @@ services:
 
 before_script:
   - mysql -u root -e 'create database laravelexceptionnotifier;'
-  - curl -s http://getcomposer.org/installer | php
+  - curl -s https://getcomposer.org/installer | php
   - php composer.phar install
   - composer create-project --prefer-dist laravel/laravel laravelexceptionnotifier
   - cp .env.travis laravelexceptionnotifier/.env
