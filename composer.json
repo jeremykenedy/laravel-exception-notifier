@@ -26,7 +26,7 @@
         "php": "^8.0"
     },
     "require-dev": {
-        "laravel/framework": "9.*|10.*"
+        "laravel/framework": "9.*|10.*|11.*|12.*"
     },
     "autoload": {
         "psr-4": {
