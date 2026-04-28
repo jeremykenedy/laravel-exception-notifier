@@ -1,4 +1,4 @@
-# Laravel Exception Notifier | A Laravel 5, 6, 7, 8, 9 and 10 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+# Laravel Exception Notifier | A Laravel 5, 6, 7, 8, 9, 10, 11, 12, and 13 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
