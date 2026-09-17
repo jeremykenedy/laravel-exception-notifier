@@ -23,7 +23,7 @@ npm run test:browser
 
 Playwright starts a loopback-only PHP server on port 8765. `scripts/render-previews.php` renders synthetic data through Blade into `build/previews`. All layouts are tested at 375px and 1200px in light, dark, and system themes. Further cases check live system-theme changes and long exception data. The modern layouts are checked with axe against WCAG A/AA rules.
 
-Screenshots and the HTML report are written under `build/`. CI uploads them along with the PHP coverage report. For manual inspection, run:
+Screenshots and the HTML report are written under `build/`. CI uploads them along with the PHP coverage report. `phpunit.coverage.xml` measures executable package PHP; Blade templates are covered by rendering and browser assertions instead. For manual inspection, run:
 
 ```bash
 php scripts/render-previews.php

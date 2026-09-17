@@ -3,6 +3,7 @@
 namespace jeremykenedy\laravelexceptionnotifier\Test;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Mail\Mailables\Content;
 use jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -56,6 +57,15 @@ class TestCase extends OrchestraTestCase
                 'emailExceptionSubject' => 'Production exception',
             ]
         ));
+    }
+
+    protected function mailContent($mail): array
+    {
+        if (class_exists(Content::class)) {
+            return $mail->content()->with['content'];
+        }
+
+        return $mail->build()->viewData['content'];
     }
 
     protected function content(): array

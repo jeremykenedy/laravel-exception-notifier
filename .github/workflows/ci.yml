@@ -76,7 +76,7 @@ jobs:
       - run: composer update --prefer-dist --no-interaction
       - run: composer lint
       - run: composer audit
-      - run: vendor/bin/phpunit --fail-on-deprecation --coverage-filter src --coverage-clover build/coverage.xml
+      - run: vendor/bin/phpunit --configuration phpunit.coverage.xml --coverage-clover build/coverage.xml
       - run: bash tests/integration/install.sh
       - run: npm ci --ignore-scripts
       - run: npm audit

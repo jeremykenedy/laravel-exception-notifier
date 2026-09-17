@@ -2,8 +2,11 @@
     "preset": "laravel",
     "rules": {
         "binary_operator_spaces": {
-            "operators": {"=>": "align_single_space_minimal"}
+            "operators": {
+                "=>": "align_single_space_minimal"
+            }
         },
-        "no_unused_imports": false
+        "no_unused_imports": false,
+        "single_line_empty_body": false
     }
 }

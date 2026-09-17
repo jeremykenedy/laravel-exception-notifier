@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -111,12 +112,22 @@ class CompatibilityTest extends TestCase
         config()->set('exceptions.emailExceptionCCto', '');
         config()->set('exceptions.emailExceptionBCCto', null);
         config()->set('exceptions.emailExceptionFrom', null);
-        $envelope = (new ExceptionOccurred([]))->envelope();
-        $this->assertSame([], $envelope->cc);
-        $this->assertSame([], $envelope->bcc);
-        $this->assertNull($envelope->from);
-        config()->set('exceptions.emailExceptionsTo', null);
-        $this->assertSame([], (new ExceptionOccurred([]))->envelope()->to);
+        $mail = new ExceptionOccurred([]);
+        if (class_exists(Envelope::class)) {
+            $envelope = $mail->envelope();
+            $this->assertSame([], $envelope->cc);
+            $this->assertSame([], $envelope->bcc);
+            $this->assertNull($envelope->from);
+            config()->set('exceptions.emailExceptionsTo', null);
+            $this->assertSame([], (new ExceptionOccurred([]))->envelope()->to);
+        } else {
+            $mail->build();
+            $this->assertSame([], $mail->cc);
+            $this->assertSame([], $mail->bcc);
+            $this->assertSame([], $mail->from);
+            config()->set('exceptions.emailExceptionsTo', null);
+            $this->assertSame([], (new ExceptionOccurred([]))->build()->to);
+        }
     }
 
     public function test_quoted_csv_and_serialized_mail_keep_existing_behavior(): void
@@ -124,9 +135,15 @@ class CompatibilityTest extends TestCase
         $this->configureMail();
         config()->set('exceptions.emailExceptionsTo', '"first@example.com","second@example.com"');
         $mail = unserialize(serialize(new ExceptionOccurred($this->content())));
-        $this->assertSame('first@example.com', $mail->envelope()->to[0]->address);
-        $this->assertSame('second@example.com', $mail->envelope()->to[1]->address);
-        $this->assertSame($this->content(), $mail->content()->with['content']);
+        if (class_exists(Envelope::class)) {
+            $this->assertSame('first@example.com', $mail->envelope()->to[0]->address);
+            $this->assertSame('second@example.com', $mail->envelope()->to[1]->address);
+        } else {
+            $mail->build();
+            $this->assertSame('first@example.com', $mail->to[0]['address']);
+            $this->assertSame('second@example.com', $mail->to[1]['address']);
+        }
+        $this->assertSame($this->content(), $this->mailContent($mail));
     }
 
     public function test_handler_passes_original_exception_and_request_data_to_the_mailer(): void
@@ -137,7 +154,7 @@ class CompatibilityTest extends TestCase
         $exception = new RuntimeException('Checkout failed');
         $this->handler()->sendEmail($exception);
         Mail::assertSent(ExceptionOccurred::class, function ($mail) use ($exception) {
-            $content = $mail->content()->with['content'];
+            $content = $this->mailContent($mail);
             $this->assertSame($exception->getMessage(), $content['message']);
             $this->assertSame($exception->getFile(), $content['file']);
             $this->assertSame($exception->getLine(), $content['line']);
@@ -184,7 +201,9 @@ class CompatibilityTest extends TestCase
 
             public $callback;
 
-            public function ignore(string $class): void {}
+            public function ignore(string $class): void
+            {
+            }
 
             public function reportable($callback): void
             {

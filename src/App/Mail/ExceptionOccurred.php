@@ -27,15 +27,9 @@ class ExceptionOccurred extends Mailable
      */
     public function envelope(): Envelope
     {
-        $emailsTo = config('exceptions.emailExceptionsTo', false) ?
-            str_getcsv(config('exceptions.emailExceptionsTo'), ',', '"', '\\') :
-            null;
-        $emailsCc = config('exceptions.emailExceptionCCto', false) ?
-            str_getcsv(config('exceptions.emailExceptionCCto'), ',', '"', '\\') :
-            null;
-        $emailsBcc = config('exceptions.emailExceptionBCCto', false) ?
-            str_getcsv(config('exceptions.emailExceptionBCCto'), ',', '"', '\\') :
-            null;
+        $emailsTo = $this->recipients('emailExceptionsTo');
+        $emailsCc = $this->recipients('emailExceptionCCto');
+        $emailsBcc = $this->recipients('emailExceptionBCCto');
         $fromSender = config('exceptions.emailExceptionFrom');
         $subject = config('exceptions.emailExceptionSubject');
 
@@ -61,5 +55,33 @@ class ExceptionOccurred extends Mailable
                 'content' => $this->content,
             ]
         );
+    }
+
+    public function build()
+    {
+        if (class_exists(Envelope::class)) {
+            return $this;
+        }
+
+        // Early Laravel 9 releases use build() instead of envelope()/content().
+        if ($from = config('exceptions.emailExceptionFrom')) {
+            $this->from($from);
+        }
+        if ($subject = config('exceptions.emailExceptionSubject')) {
+            $this->subject($subject);
+        }
+
+        return $this->to($this->recipients('emailExceptionsTo'))
+            ->cc($this->recipients('emailExceptionCCto'))
+            ->bcc($this->recipients('emailExceptionBCCto'))
+            ->view(config('exceptions.emailExceptionView'))
+            ->with(['content' => $this->content]);
+    }
+
+    private function recipients(string $key): array
+    {
+        $value = config('exceptions.'.$key);
+
+        return $value ? str_getcsv($value, ',', '"', '\\') : [];
     }
 }
