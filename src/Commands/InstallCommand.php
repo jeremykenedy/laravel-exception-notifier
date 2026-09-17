@@ -135,15 +135,14 @@ class InstallCommand extends Command
             $this->info('Backup saved to '.$backup);
         }
 
-        $framework = $framework ?? 'legacy';
         $theme = $theme ?? 'light';
-        $view = $framework === 'legacy' ? 'exception' : $framework;
-        $contents = $framework === 'legacy' && $theme === 'light'
+        $view = $framework === null || $framework === 'legacy' ? 'exception' : $framework;
+        $contents = $framework === null
             ? $files->get(dirname(__DIR__).'/resources/views/emails/exception.blade.php')
             : "@include('laravelexceptionnotifier::emails.{$view}', ['theme' => '{$theme}'])\n";
         $files->ensureDirectoryExists(dirname($path));
         $files->replace($path, $contents);
-        $this->info('Installed '.$framework.' email view ('.$theme.').');
+        $this->info('Installed '.($framework ?? 'legacy').' email view.');
 
         return true;
     }

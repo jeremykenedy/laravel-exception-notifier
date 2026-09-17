@@ -97,6 +97,7 @@ use Illuminate\Support\Facades\Mail;
                 'line' => $exception->getLine(),
                 'trace' => $exception->getTrace(),
                 'url' => request()->url(),
+                'body' => request()->all(),
                 'ip' => request()->ip(),
             ]));
         } catch (\Throwable $mailException) {

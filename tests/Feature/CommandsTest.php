@@ -97,7 +97,7 @@ class CommandsTest extends TestCase
         $this->assertCount(2, $backups);
         $this->assertContains($bootstrap, $backups);
         $this->assertContains($tailwind, $backups);
-        $this->assertStringContainsString('exception-summary', file_get_contents($path));
+        $this->assertStringContainsString('exception-summary', view('emails.exception', ['content' => []])->render());
     }
 
     public function test_switch_keeps_custom_config_and_mailer_unchanged(): void
@@ -157,5 +157,24 @@ class CommandsTest extends TestCase
         $this->app->instance(Filesystem::class, $files);
         $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(1);
         $this->assertFileDoesNotExist(resource_path('views/emails/exception.blade.php'));
+    }
+
+    public function test_explicit_legacy_light_selection_overrides_configured_dark_mode(): void
+    {
+        config()->set('exceptions.emailExceptionTheme', 'dark');
+        $this->artisan('exception-notifier:install', [
+            '--framework' => 'legacy', '--theme' => 'light', '--no-interaction' => true,
+        ])->assertExitCode(0);
+        $html = view('emails.exception', ['content' => []])->render();
+        $this->assertStringContainsString('name="color-scheme" content="light"', $html);
+        $this->assertStringNotContainsString('background: #101827', $html);
+    }
+
+    public function test_default_legacy_installation_keeps_configuration_driven_theme(): void
+    {
+        config()->set('exceptions.emailExceptionTheme', 'dark');
+        $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
+        $html = view('emails.exception', ['content' => []])->render();
+        $this->assertStringContainsString('name="color-scheme" content="dark"', $html);
     }
 }

@@ -18,6 +18,8 @@ str_getcsv(config('exceptions.emailExceptionBCCto'), ',', '"', '\\')
 
 Keep your custom mailer behavior and review this small diff before deploying. The setup commands deliberately do not replace application PHP files.
 
+The updated mailer also includes a `build()` fallback for early Laravel 9 releases that predate the envelope/content API. Applications using those releases can compare the published mailer with `src/App/Mail/ExceptionOccurred.php` and apply the fallback while retaining their customizations.
+
 ## Copied Handler trait on PHP 8.0 through 8.4
 
 The original trait declared a `$dontReport` property that conflicts with Laravel's Handler property on PHP versions before 8.5. The updated trait adds the same ignored exception classes using `$this->ignore()` in `register()`. This also preserves exclusions defined by the application.
@@ -37,7 +39,7 @@ The modern wrappers follow the package's template updates. If you need to pin or
 
 If `exceptions.emailExceptionView` points to a custom view, it continues to do so. To use the installed wrapper, explicitly set that configuration value to `emails.exception` and rebuild your configuration cache.
 
-For the existing standalone template, `--framework=legacy --theme=light` publishes a complete Blade file. Dark and system legacy selections use a wrapper around the package's legacy template. Existing published views stay unchanged until explicitly replaced.
+An installation without a layout selection publishes the complete legacy Blade file and follows the theme configuration. Explicit layout selections, including `--framework=legacy --theme=light`, install a wrapper that fixes the chosen theme. Existing published views stay unchanged until explicitly replaced.
 
 ## Rollback
 
