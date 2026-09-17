@@ -40,7 +40,7 @@ jobs:
           - { laravel: '13', testbench: '^11.0', php: '8.5', dependencies: highest }
           - { laravel: '9', testbench: '^7.0', php: '8.0', dependencies: lowest }
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: ${{ matrix.php }}
@@ -61,14 +61,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
         with:
           php-version: '8.5'
           extensions: mbstring, dom, sqlite3, pdo_sqlite
           coverage: xdebug
           tools: composer:v2
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
           cache: npm
@@ -77,11 +77,12 @@ jobs:
       - run: composer lint
       - run: composer audit
       - run: vendor/bin/phpunit --fail-on-deprecation --coverage-filter src --coverage-clover build/coverage.xml
+      - run: bash tests/integration/install.sh
       - run: npm ci --ignore-scripts
       - run: npm audit
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: test-reports

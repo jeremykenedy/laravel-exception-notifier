@@ -17,7 +17,13 @@ $content = [
     'ip'      => '192.0.2.24',
     'trace'   => [
         ['class' => 'App\\Services\\Checkout', 'type' => '->', 'function' => 'submit', 'file' => '/var/www/app/Http/Controllers/CheckoutController.php', 'line' => 28],
-        ['class' => 'App\\Http\\Controllers\\CheckoutController', 'type' => '->', 'function' => 'store', 'file' => '/var/www/vendor/laravel/framework/src/Illuminate/Routing/Controller.php', 'line' => 54],
+        [
+            'class'    => 'App\\Http\\Controllers\\CheckoutController',
+            'type'     => '->',
+            'function' => 'store',
+            'file'     => '/var/www/vendor/laravel/framework/src/Illuminate/Routing/Controller.php',
+            'line'     => 54,
+        ],
         ['function' => 'call_user_func'],
     ],
 ];

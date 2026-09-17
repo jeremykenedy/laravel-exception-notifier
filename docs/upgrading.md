@@ -18,6 +18,12 @@ str_getcsv(config('exceptions.emailExceptionBCCto'), ',', '"', '\\')
 
 Keep your custom mailer behavior and review this small diff before deploying. The setup commands deliberately do not replace application PHP files.
 
+## Copied Handler trait on PHP 8.0 through 8.4
+
+The original trait declared a `$dontReport` property that conflicts with Laravel's Handler property on PHP versions before 8.5. The updated trait adds the same ignored exception classes using `$this->ignore()` in `register()`. This also preserves exclusions defined by the application.
+
+If you copy the trait into your application, review and apply this change there. An existing Handler that implements the README's `sendEmail()` and callback directly does not need this change.
+
 ## Switching the email layout
 
 ```bash

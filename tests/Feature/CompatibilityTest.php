@@ -157,8 +157,11 @@ class CompatibilityTest extends TestCase
         $handler = new class($this->app) extends Handler
         {
             use ExceptionNotificationHandlerTrait;
+
+            protected $dontReport = [\LogicException::class];
         };
         foreach ([
+            new \LogicException('Application-specific exclusion'),
             new AuthenticationException,
             new AuthorizationException,
             new HttpException(404),
@@ -180,6 +183,8 @@ class CompatibilityTest extends TestCase
             use ExceptionNotificationHandlerTrait;
 
             public $callback;
+
+            public function ignore(string $class): void {}
 
             public function reportable($callback): void
             {

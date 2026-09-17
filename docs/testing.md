@@ -32,6 +32,10 @@ php -S 127.0.0.1:8765 -t build/previews
 
 Open `http://127.0.0.1:8765/bootstrap5-light.html` or `tailwind-dark.html`. The sample URL and IP address are reserved examples.
 
+## Fresh application integration
+
+`bash tests/integration/install.sh` creates a temporary Laravel 13 application, installs this checkout through a Composer path repository, verifies package discovery and mail delivery, compiles views/configuration, and confirms that a Composer update preserves published file hashes. It removes its temporary application on exit and runs in the current-stack CI job.
+
 ## CI matrix
 
 | Laravel | Testbench | PHP |

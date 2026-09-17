@@ -16,24 +16,21 @@ use Throwable;
 trait ExceptionNotificationHandlerTrait
 {
     /**
-     * A list of the exception types that should not be reported.
-     *
-     * @var array
-     */
-    protected $dontReport = [
-        AuthenticationException::class,
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        TokenMismatchException::class,
-        ValidationException::class,
-    ];
-
-    /**
      * Register the exception handling callbacks for the application.
      */
     public function register(): void
     {
+        foreach ([
+            AuthenticationException::class,
+            AuthorizationException::class,
+            HttpException::class,
+            ModelNotFoundException::class,
+            TokenMismatchException::class,
+            ValidationException::class,
+        ] as $exception) {
+            $this->ignore($exception);
+        }
+
         $this->reportable(function (Throwable $e) {
             $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 

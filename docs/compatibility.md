@@ -28,7 +28,7 @@ Bootstrap 5 and Tailwind views share markup and inline email styles. Framework c
 
 The legacy template keeps its existing appearance with mobile wrapping and document metadata fixes. Dark mode defaults to light. Exception values continue to be escaped with Blade. Request bodies and stack arguments are not included in the HTML.
 
-No database, queue policy, retry policy, exception filtering change, or automatic request-data capture is introduced. Additional toast, theme-toggle, IP-persistence, and seeding packages would add unrelated behavior, so they remain unnecessary.
+The Handler trait registers its original six exclusions through Laravel's `ignore()` API instead of declaring a conflicting inherited property. Application exclusions remain intact. No database, queue policy, retry policy, or automatic request-data capture is introduced. Additional toast, theme-toggle, IP-persistence, and seeding packages would add unrelated behavior, so they remain unnecessary.
 
 ## Verification boundaries
 

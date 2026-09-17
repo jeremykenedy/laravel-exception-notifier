@@ -19,15 +19,16 @@ class TestCase extends OrchestraTestCase
     {
         $this->sandbox = sys_get_temp_dir().'/exception-notifier-'.bin2hex(random_bytes(8));
         $files = new Filesystem;
-        foreach (['app', 'config', 'resources/views'] as $path) {
+        foreach (['app', 'config', 'resources/views', 'bootstrap/cache'] as $path) {
             $files->makeDirectory($this->sandbox.'/'.$path, 0755, true);
         }
         $app->useAppPath($this->sandbox.'/app');
-        $app->useConfigPath($this->sandbox.'/config');
         $bootstrap = $app->bootstrapPath();
         $storage = $app->storagePath();
         $app->setBasePath($this->sandbox);
-        $app->useBootstrapPath($bootstrap);
+        if (method_exists($app, 'useBootstrapPath')) {
+            $app->useBootstrapPath($bootstrap);
+        }
         $app->useStoragePath($storage);
         $app['config']->set('view.paths', [$this->sandbox.'/resources/views']);
         $app['config']->set('mail.default', 'array');
