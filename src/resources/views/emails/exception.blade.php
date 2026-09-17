@@ -1,16 +1,24 @@
+@php
+    $theme = $theme ?? config('exceptions.emailExceptionTheme', 'light');
+    $theme = in_array($theme, ['light', 'dark', 'system'], true) ? $theme : 'light';
+@endphp
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="{{ $theme === 'system' ? 'light dark' : $theme }}" />
+        <title>Exception notification</title>
         <meta name="robots" content="noindex,nofollow" />
         <style>
-            body { background-color: #F9F9F9; color: #222; font: 14px/1.4 Helvetica, Arial, sans-serif; margin: 0; padding-bottom: 45px; }
+            body { background-color: #F9F9F9; color: #222; font: 14px/1.4 Helvetica, Arial, sans-serif; margin: 0; padding-bottom: 45px; overflow-wrap: anywhere; }
             a { cursor: pointer; text-decoration: none; }
             a:hover { text-decoration: underline; }
             abbr[title] { border-bottom: none; cursor: help; text-decoration: none; }
             code, pre { font: 13px/1.5 Consolas, Monaco, Menlo, "Ubuntu Mono", "Liberation Mono", monospace; }
             table, tr, th, td { background: #FFF; border-collapse: collapse; vertical-align: top; }
             table { background: #FFF; border: 1px solid #E0E0E0; box-shadow: 0px 0px 1px rgba(128, 128, 128, .2); margin: 1em 0; width: 100%; }
+            .trace-details { table-layout: fixed; }
             table th, table td { border: solid #E0E0E0; border-width: 1px 0; padding: 8px 10px; }
             table th { background-color: #E0E0E0; font-weight: bold; text-align: left; }
             .hidden-xs-down { display: none; }
@@ -37,7 +45,22 @@
             .trace-arguments { color: #777; font-weight: normal; padding-left: 2px; }
             @media (min-width: 575px) {
                 .hidden-xs-down { display: initial; }
-            }</style>
+            }
+            @if($theme === 'system')
+            @media (prefers-color-scheme: dark) {
+            @endif
+            @if($theme === 'system' || $theme === 'dark')
+                body { background: #101827; color: #edf2f7; }
+                table, tr, th, td { background: #1b2738; border-color: #35455c; }
+                table th { background: #263449; }
+                .trace-head .trace-class, .trace-file-path, .trace-file-path a { color: #edf2f7; }
+                .text-muted, .trace-arguments { color: #b4c2d3; }
+                .trace-class, .trace-method { color: #ffa6a0; }
+            @endif
+            @if($theme === 'system')
+            }
+            @endif
+        </style>
     </head>
     <body>
         <div class="exception-summary">

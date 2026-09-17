@@ -50,3 +50,6 @@ packages/
 # Debug Files
 npm-debug.log
 yarn-error.log
+/.phpunit.cache
+/.phpunit.result.cache
+/build

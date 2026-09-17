@@ -1,111 +1,97 @@
-# Laravel Exception Notifier | A Laravel 5, 6, 7, 8, 9, 10, 11, 12, and 13 Exceptions Email Notification [Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+# Laravel Exception Notifier
 
+Send Laravel exception emails with the message, request URL, IP address, and stack trace.
+
+[![Tests](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml/badge.svg)](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml)
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
-[![Build Status](https://travis-ci.org/jeremykenedy/laravel-exception-notifier.svg?branch=master)](https://travis-ci.org/jeremykenedy/laravel-exception-notifier)
-[![StyleCI](https://github.styleci.io/repos/91833181/shield?branch=master)](https://github.styleci.io/repos/91833181)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/?branch=master)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/jeremykenedy/laravel-exception-notifier/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
-[![MadeWithLaravel.com shield](https://madewithlaravel.com/storage/repo-shields/1350-shield.svg)](https://madewithlaravel.com/p/laravel-exception-notifier/shield-link)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Table of contents:
-- [About](#about)
-- [Requirements](#requirements)
-- [Installation Instructions](#installation-instructions)
-- [Screenshots](#screenshots)
-- [File Tree](#file-tree)
-- [License](#license)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/email-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/email-light.png">
+  <img alt="Exception email showing request details and a stack trace" src="docs/images/email-light.png" width="880">
+</picture>
 
-## About
-Laravel exception notifier will send an email of the error along with the stack trace to the chosen recipients.
-[This Package](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier) includes all necessary traits, views, configs, and Mailers for email notifications upon your applications exceptions.
-You can customize who send to, cc to, bcc to, enable/disable, and custom subject or default subject based on environment.
-Built for Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6, 7, 8, 9, and 10.
+## Compatibility
 
-Get the errors and fix them before the client even reports them, that's why this exists!
+The existing standalone Blade email remains the default. `composer update` does not publish files, switch layouts, modify application settings, or register an exception reporting callback. Existing customized mailers and views continue to work.
 
-## Requirements
-* [Laravel 5.2+, 6, 7, 8, 9, or 10](https://laravel.com/docs/installation)
+| Laravel | PHP baseline | Package |
+| --- | --- | --- |
+| 9 | 8.0.2 | Current release |
+| 10 | 8.1 | Current release |
+| 11, 12 | 8.2 | Current release |
+| 13 | 8.3 | Current release |
+| 7, 8 | Determined by your Laravel version | `2.2.0` |
+| 5.2 through 6 | Determined by your Laravel version | `1.2.0` |
 
-## Installation Instructions
-1. From your projects root folder in terminal run:
+The current package retains its `^8.0` PHP constraint. Laravel determines the application's minimum PHP version. Historical compatibility testing does not extend Laravel's upstream security support.
 
-    Laravel 9-10 use:
+See [upgrading](docs/upgrading.md), [historical installation](docs/legacy-installation.md), and [compatibility decisions](docs/compatibility.md).
 
-    ```bash
-        composer require jeremykenedy/laravel-exception-notifier
-    ```
-
-    Laravel 7-8 use:
-
-    ```bash
-        composer require jeremykenedy/laravel-exception-notifier:2.2.0
-    ```
-
-    Laravel 6 and below use:
-
-    ```bash
-        composer require jeremykenedy/laravel-exception-notifier:1.2.0
-    ```
-
-2. Register the package
-* Laravel 5.5 and up
-Uses package auto discovery feature, no need to edit the `config/app.php` file.
-
-* Laravel 5.4 and below
-Register the package with laravel in `config/app.php` under `providers` with the following:
-
-```php
-    jeremykenedy\laravelexceptionnotifier\LaravelExceptionNotifier::class,
-```
-
-3. Publish the packages view, mailer, and config files by running the following from your projects root folder:
+## Install
 
 ```bash
-    php artisan vendor:publish --tag=laravelexceptionnotifier
+composer require jeremykenedy/laravel-exception-notifier
+php artisan exception-notifier:install
 ```
 
-#### NOTE: If upgrading to Laravel 9 or 10 from an older version of this package you will need to republish the assets with:
+Laravel discovers the provider automatically. The command offers the existing layout, Bootstrap 5, or Tailwind, followed by light, dark, or system theme. Choosing `keep` preserves the current view or installs the legacy view if none exists.
+
+For unattended installation using the existing defaults:
 
 ```bash
-    php artisan vendor:publish --force --tag=laravelexceptionnotifier
+php artisan exception-notifier:install --no-interaction
 ```
 
-4. In `App\Exceptions\Handler.php` include the additional following classes in the head:
+The original publish command remains supported:
 
-#### Laravel 9 and Above use:
-
-```php
-    use App\Mail\ExceptionOccurred;
-    use Illuminate\Support\Facades\Log;
-    use Illuminate\Support\Facades\Mail;
-    use Throwable;
+```bash
+php artisan vendor:publish --tag=laravelexceptionnotifier
 ```
 
-#### Laravel 8 and Below use:
+Both approaches create these files when missing:
 
-```php
-    use App\Mail\ExceptionOccured;
-    use Illuminate\Support\Facades\Log;
-    use Mail;
-    use Symfony\Component\Debug\Exception\FlattenException;
-    use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
+- `app/Mail/ExceptionOccurred.php`
+- `resources/views/emails/exception.blade.php`
+- `config/exceptions.php`
+
+Configure your application's mail transport, then set the notification recipients:
+
+```dotenv
+EMAIL_EXCEPTION_ENABLED=true
+EMAIL_EXCEPTION_FROM=errors@example.com
+EMAIL_EXCEPTION_TO="developer@example.com,operations@example.com"
+EMAIL_EXCEPTION_CC=
+EMAIL_EXCEPTION_BCC=
+EMAIL_EXCEPTION_SUBJECT="Production exception"
+EMAIL_EXCEPTION_THEME=light
 ```
 
-5. Update `App\Exceptions\Handler.php`
+If no subject is supplied, the default is `Error on ` followed by the application environment. The package does not send a test message during installation.
 
-#### Laravel 9 and Above:
+## Register exception reporting
 
-##### Add the `sendEmail()` method:
+### Laravel 11 through 13
+
+Add a report callback to your existing `withExceptions` block in `bootstrap/app.php`:
+
 ```php
-    /**
-     * Sends an email upon exception.
-     */
-    public function sendEmail(Throwable $exception): void
-    {
+use App\Mail\ExceptionOccurred;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+// In the existing application builder chain:
+->withExceptions(function (Exceptions $exceptions): void {
+    $exceptions->report(function (\Throwable $exception): void {
+        if (! config('exceptions.emailExceptionEnabled')) {
+            return;
+        }
+
         try {
-            $content = [
+            Mail::send(new ExceptionOccurred([
                 'message' => $exception->getMessage(),
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
@@ -113,128 +99,109 @@ Register the package with laravel in `config/app.php` under `providers` with the
                 'url' => request()->url(),
                 'body' => request()->all(),
                 'ip' => request()->ip(),
-            ];
-
-            Mail::send(new ExceptionOccurred($content));
-        } catch (Throwable $exception) {
-            Log::error($exception);
+            ]));
+        } catch (\Throwable $mailException) {
+            Log::error($mailException);
         }
-    }
+    });
+})
 ```
 
-##### Add or update the `register()` method:
-```php
-    /**
-     * Register the exception handling callbacks for the application.
-     */
-    public function register(): void
-    {
-        $this->reportable(function (Throwable $e) {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+Laravel's ignored exception rules still apply. The callback does not stop normal logging. Add it once to avoid duplicate emails, and keep any existing reporting callbacks.
 
-            if ($enableEmailExceptions) {
-                $this->sendEmail($e);
-            }
-        });
-    }
-```
+### Laravel 9 and 10, or an existing Handler class
 
-#### Laravel 8 and Below:
+In `app/Exceptions/Handler.php`, register the same callback with `$this->reportable(...)` inside `register()`. Keep your existing `dontReport` rules and callbacks. Applications already using `sendEmail()` or `ExceptionNotificationHandlerTrait` can keep them unchanged.
 
-##### Replace the `report()` method with:
+The trait source is available at `src/App/Traits/ExceptionNotificationHandlerTrait.php` for applications that already copy it. It is not automatically loaded into the application's `App` namespace or installed over an existing Handler.
 
-```php
-    /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param \Throwable $exception
-     *
-     * @return void
-     */
-    public function report(Throwable $exception)
-    {
-        $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
+## Layouts and dark mode
 
-        if ($enableEmailExceptions === '') {
-            $enableEmailExceptions = config('exceptions.emailExceptionEnabledDefault');
-        }
+| Option | View | Behavior |
+| --- | --- | --- |
+| `legacy` | Original standalone Blade template | Default layout, with mobile wrapping fixes and optional dark mode |
+| `bootstrap5` | Blade with Bootstrap 5 classes | Modern email layout with inline styles |
+| `tailwind` | Blade with Tailwind utility classes | Same email content and layout with inline styles |
 
-        if ($enableEmailExceptions && $this->shouldReport($exception)) {
-            $this->sendEmail($exception);
-        }
-
-        parent::report($exception);
-    }
-```
-
-##### Add the method `sendEmail()`:
-```php
-    /**
-     * Sends an email upon exception.
-     *
-     * @param \Throwable $exception
-     *
-     * @return void
-     */
-    public function sendEmail(Throwable $exception)
-    {
-        try {
-            $e = FlattenException::create($exception);
-            $handler = new SymfonyExceptionHandler();
-            $html = $handler->getHtml($e);
-
-            Mail::send(new ExceptionOccured($html));
-        } catch (Throwable $exception) {
-            Log::error($exception);
-        }
-    }
-```
-
-6. Configure your email settings in the `.env` file.
-
-7. Add the following (optional) settings to your `.env` file and enter your settings:
-
-    * **Note:** the defaults for these are located in `config/exception.php`
+All three render without npm, a CDN, JavaScript, or external fonts. The optional layouts use a shared template so their content and escaping stay consistent. They are email templates, not an admin dashboard or frontend scaffold. Browser framework classes are included for customization; the email appearance does not require a full framework stylesheet.
 
 ```bash
-        EMAIL_EXCEPTION_ENABLED=false
-        EMAIL_EXCEPTION_FROM="${MAIL_FROM_ADDRESS}"
-        EMAIL_EXCEPTION_TO='email1@gmail.com, email2@gmail.com'
-        EMAIL_EXCEPTION_CC=''
-        EMAIL_EXCEPTION_BCC=''
-        EMAIL_EXCEPTION_SUBJECT=''
+# Select a layout during installation.
+php artisan exception-notifier:install --framework=bootstrap5 --theme=system
+
+# Explicitly replace an existing view, saving a backup first.
+php artisan exception-notifier:update --framework=tailwind --theme=dark --force
+
+# Return to the original layout.
+php artisan exception-notifier:update --framework=legacy --theme=light --force
 ```
 
-## Screenshots
-![Email Notification](https://s3-us-west-2.amazonaws.com/github-project-images/laravel-exception-notifier/exception-error-email-min.jpeg)
+`light` stays light, `dark` renders dark colors directly, and `system` follows `prefers-color-scheme` where the email client supports it. Email clients can override colors, and clients without media query support use the light fallback for `system`.
 
-## File Tree
-```
-└── laravel-exception-notifier
-    ├── .gitignore
-    ├── LICENSE
-    ├── composer.json
-    ├── readme.md
-    └── src
-        ├── .env.example
-        ├── App
-        │   ├── Mail
-        │   │   └── ExceptionOccurred.php
-        │   └── Traits
-        │       └── ExceptionNotificationHandlerTrait.php
-        ├── LaravelExceptionNotifier.php
-        ├── config
-        │   └── exceptions.php
-        └── resources
-            └── views
-                └── emails
-                    └── exception.blade.php
+A selected theme is saved in the generated view wrapper. For a view that follows configuration instead, use:
+
+```blade
+@include('laravelexceptionnotifier::emails.tailwind')
 ```
 
-* Tree command can be installed using brew: `brew install tree`
-* File tree generated using command `tree -a -I '.git|node_modules|vendor|storage|tests'`
+Then set `emailExceptionTheme` in `config/exceptions.php` to `env('EMAIL_EXCEPTION_THEME', 'light')`. Older published config files need this entry added manually.
+
+### Custom views
+
+`exceptions.emailExceptionView` continues to select the mailable's view. Set it to your own Blade view or a package view such as `laravelexceptionnotifier::emails.bootstrap5`. The `$content` array is unchanged. The commands only manage `resources/views/emails/exception.blade.php`; a custom view setting takes precedence and is never rewritten.
+
+Laravel's standard namespaced overrides under `resources/views/vendor/laravelexceptionnotifier/emails/` also work.
+
+### Optional Laravel UI Kit
+
+If your application already uses [Laravel UI Kit](https://github.com/jeremykenedy/laravel-ui-kit), the commands can read its configured CSS framework and default theme:
+
+```bash
+php artisan exception-notifier:install --ui-kit
+php artisan exception-notifier:update --ui-kit --force
+```
+
+This selects `bootstrap5` or `tailwind` using `ui-kit.css_framework` and reads `ui-kit.dark_mode.enabled` and `ui-kit.dark_mode.default`. `--theme` can override the imported theme. An absent configuration or unsupported framework fails before writing files. Do not combine `--ui-kit` and `--framework`.
+
+The selection is copied when the command runs. Later UI Kit changes do not silently switch your emails. UI Kit is optional, has its own Laravel/PHP requirements, and is neither installed nor modified by these commands. Email views do not use its interactive components.
+
+[Laravel Toast](https://github.com/jeremykenedy/laravel-toast), [Laravel Darkmode Toggle](https://github.com/jeremykenedy/laravel-darkmode-toggle), [Laravel IP Capture](https://github.com/jeremykenedy/laravel-ip-capture), and [Laravel Seedster](https://github.com/jeremykenedy/laravel-seedster) are not required. This package has no browser interactions or database records that need those integrations. The request IP comes from Laravel's request object.
+
+## Safe updates
+
+```bash
+composer update jeremykenedy/laravel-exception-notifier
+php artisan exception-notifier:update --no-interaction
+```
+
+The update command restores missing files and preserves existing files. Even `--force` alone does not reset a view. A replacement requires `--framework` or `--ui-kit` plus `--force`; the previous view is saved beside it with a unique `.bak` suffix. Configuration and mailer files are never overwritten by these commands.
+
+After changing views or configuration, use your normal deployment cache workflow, for example:
+
+```bash
+php artisan view:clear
+php artisan config:cache
+```
+
+See [the upgrade guide](docs/upgrading.md) for published mailer changes and rollback steps.
+
+## Testing
+
+```bash
+composer install
+composer test
+composer lint
+composer audit
+
+npm ci --ignore-scripts
+npx playwright install chromium
+npm run test:browser
+```
+
+PHPUnit covers publishing, configuration, recipients, actual rendering and in-memory mail delivery, throwable reporting, delivery failures, escaping, themes, and command upgrades. Browser tests cover mobile and desktop rendering, long text, system theme changes, and accessibility of the modern layouts. Tests use generated sample data and do not send external mail.
+
+CI tests Laravel 9 through 13 on their supported PHP combinations, plus the lowest dependencies on PHP 8.0. Browser tests, lint, audits, and a coverage report run on the current stack. See [testing details](docs/testing.md).
 
 ## License
-Laravel-Exception-Notifier | A Laravel Exceptions Email Notification Package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2017-2026 Jeremy Kenedy. Released under the [MIT license](LICENSE).
