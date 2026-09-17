@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { laravel: '9', testbench: '^7.0', php: '8.0', dependencies: highest }
+          - { laravel: '9', testbench: '^7.0', php: '8.1', dependencies: highest }
+          - { laravel: '9', testbench: '^7.0', php: '8.2', dependencies: highest }
+          - { laravel: '10', testbench: '^8.0', php: '8.1', dependencies: highest }
+          - { laravel: '10', testbench: '^8.0', php: '8.2', dependencies: highest }
+          - { laravel: '10', testbench: '^8.0', php: '8.3', dependencies: highest }
+          - { laravel: '11', testbench: '^9.0', php: '8.2', dependencies: highest }
+          - { laravel: '11', testbench: '^9.0', php: '8.3', dependencies: highest }
+          - { laravel: '11', testbench: '^9.0', php: '8.4', dependencies: highest }
+          - { laravel: '12', testbench: '^10.0', php: '8.2', dependencies: highest }
+          - { laravel: '12', testbench: '^10.0', php: '8.3', dependencies: highest }
+          - { laravel: '12', testbench: '^10.0', php: '8.4', dependencies: highest }
+          - { laravel: '12', testbench: '^10.0', php: '8.5', dependencies: highest }
+          - { laravel: '13', testbench: '^11.0', php: '8.3', dependencies: highest }
+          - { laravel: '13', testbench: '^11.0', php: '8.4', dependencies: highest }
+          - { laravel: '13', testbench: '^11.0', php: '8.5', dependencies: highest }
+          - { laravel: '9', testbench: '^7.0', php: '8.0', dependencies: lowest }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, sqlite3, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+      - name: Select Laravel version
+        run: composer require --dev --no-update 'laravel/framework:${{ matrix.laravel }}.*' 'orchestra/testbench:${{ matrix.testbench }}'
+      - name: Allow historical dependencies for compatibility tests
+        if: matrix.laravel == '9' || matrix.laravel == '10' || matrix.laravel == '11' || matrix.dependencies == 'lowest'
+        run: composer config audit.block-insecure false
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction ${{ matrix.dependencies == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
+      - run: composer test
+
+  quality:
+    name: Lint, audit, and browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, sqlite3, pdo_sqlite
+          coverage: xdebug
+          tools: composer:v2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: composer validate --strict
+      - run: composer update --prefer-dist --no-interaction
+      - run: composer lint
+      - run: composer audit
+      - run: vendor/bin/phpunit --fail-on-deprecation --coverage-filter src --coverage-clover build/coverage.xml
+      - run: npm ci --ignore-scripts
+      - run: npm audit
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: test-reports
+          path: |
+            build/coverage.xml
+            build/browser-report
+            build/browser-results
+          retention-days: 14

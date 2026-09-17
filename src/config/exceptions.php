@@ -72,4 +72,6 @@ return [
     */
     'emailExceptionView' => 'emails.exception',
 
+    'emailExceptionTheme' => env('EMAIL_EXCEPTION_THEME', 'light'),
+
 ];

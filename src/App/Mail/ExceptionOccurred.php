@@ -28,13 +28,13 @@ class ExceptionOccurred extends Mailable
     public function envelope(): Envelope
     {
         $emailsTo = config('exceptions.emailExceptionsTo', false) ?
-            str_getcsv(config('exceptions.emailExceptionsTo')) :
+            str_getcsv(config('exceptions.emailExceptionsTo'), ',', '"', '\\') :
             null;
         $emailsCc = config('exceptions.emailExceptionCCto', false) ?
-            str_getcsv(config('exceptions.emailExceptionCCto')) :
+            str_getcsv(config('exceptions.emailExceptionCCto'), ',', '"', '\\') :
             null;
         $emailsBcc = config('exceptions.emailExceptionBCCto', false) ?
-            str_getcsv(config('exceptions.emailExceptionBCCto')) :
+            str_getcsv(config('exceptions.emailExceptionBCCto'), ',', '"', '\\') :
             null;
         $fromSender = config('exceptions.emailExceptionFrom');
         $subject = config('exceptions.emailExceptionSubject');

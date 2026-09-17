@@ -3,6 +3,8 @@
 namespace jeremykenedy\laravelexceptionnotifier;
 
 use Illuminate\Support\ServiceProvider;
+use jeremykenedy\laravelexceptionnotifier\Commands\InstallCommand;
+use jeremykenedy\laravelexceptionnotifier\Commands\UpdateCommand;
 
 class LaravelExceptionNotifier extends ServiceProvider
 {
@@ -22,7 +24,7 @@ class LaravelExceptionNotifier extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishFiles();
     }
 
     /**
@@ -34,7 +36,9 @@ class LaravelExceptionNotifier extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/resources/views/', $this->_packageTag);
         $this->mergeConfigFrom(__DIR__.'/config/exceptions.php', $this->_packageTag);
-        $this->publishFiles();
+        if ($this->app->runningInConsole()) {
+            $this->commands([InstallCommand::class, UpdateCommand::class]);
+        }
     }
 
     /**
