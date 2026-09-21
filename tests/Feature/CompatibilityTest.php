@@ -176,6 +176,8 @@ class CompatibilityTest extends TestCase
             use ExceptionNotificationHandlerTrait;
 
             protected $dontReport = [\LogicException::class];
+
+            protected $internalDontReport = [];
         };
         foreach ([
             new \LogicException('Application-specific exclusion'),

@@ -6,7 +6,7 @@ Run `composer test` after `composer install`. Orchestra Testbench provides an is
 
 - Original publish tag, destinations, defaults, and overwrite protection.
 - Custom views, recipient lists, sender, CC/BCC, subject, and rendered mail through the array transport.
-- The existing Handler trait's enabled switch and failure logging.
+- The existing Handler trait's enabled switch, failure logging, and exclusions with Laravel's built-in exclusion list cleared.
 - All layouts and themes, missing fields, internal stack frames, and untrusted HTML.
 - Installation/update options, interactive choices, invalid inputs, repeated backups, failed backups, incomplete writes, failed replacements, partial-install cleanup, and rollback to legacy.
 - Preservation of application mailers and configuration during layout changes.
@@ -34,7 +34,7 @@ Open `http://127.0.0.1:8765/modern-light.html` or `modern-dark.html`. The sample
 
 ## Fresh application integration
 
-`bash tests/integration/install.sh` creates a temporary Laravel 13 application, installs this checkout through a Composer path repository, verifies package discovery and mail delivery, compiles views/configuration, and confirms that a Composer update preserves published file hashes. It removes its temporary application on exit and runs in the current-stack CI job.
+`bash tests/integration/install.sh` creates a temporary Laravel 13 application, installs this checkout through a Composer path repository, verifies package discovery, normal autoloading of the copied mailer and Handler trait, exception filtering, and mail delivery, compiles views/configuration, and confirms that a Composer update preserves published file hashes. It removes its temporary application on exit and runs in the current-stack CI job.
 
 ## CI matrix
 
