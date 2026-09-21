@@ -33,7 +33,7 @@ php artisan exception-notifier:update --layout=modern --theme=system --force
 php artisan view:clear
 ```
 
-The command saves the current `resources/views/emails/exception.blade.php` to a unique adjacent `.bak` file, then installs a wrapper for the selected package template. A failed backup prevents replacement. Repeated switches create separate backups.
+The command saves the current `resources/views/emails/exception.blade.php` to a unique adjacent `.bak` file, then installs a wrapper for the selected package template. A failed backup stops the command before any application files are created. View contents are written to a temporary file and checked before replacement. An incomplete write or failed replacement preserves the original view. Repeated switches create separate backups.
 
 The modern wrapper follows the package's template updates. If you need to pin or customize its markup, copy the relevant templates to Laravel's namespaced override directory, `resources/views/vendor/laravelexceptionnotifier/emails/`.
 

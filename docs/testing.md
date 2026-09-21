@@ -8,7 +8,7 @@ Run `composer test` after `composer install`. Orchestra Testbench provides an is
 - Custom views, recipient lists, sender, CC/BCC, subject, and rendered mail through the array transport.
 - The existing Handler trait's enabled switch and failure logging.
 - All layouts and themes, missing fields, internal stack frames, and untrusted HTML.
-- Installation/update options, interactive choices, invalid inputs, repeated backups, and rollback to legacy.
+- Installation/update options, interactive choices, invalid inputs, repeated backups, failed backups, incomplete writes, failed replacements, and rollback to legacy.
 - Preservation of application mailers and configuration during layout changes.
 
 Run `composer lint` to check the Laravel Pint rules and `composer format` to apply them.
