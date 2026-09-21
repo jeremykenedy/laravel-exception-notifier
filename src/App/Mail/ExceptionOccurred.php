@@ -59,7 +59,7 @@ class ExceptionOccurred extends Mailable
 
     public function build()
     {
-        if (class_exists(Envelope::class)) {
+        if (method_exists(Mailable::class, 'ensureEnvelopeIsHydrated')) {
             return $this;
         }
 

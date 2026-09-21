@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220" role="img" aria-labelledby="title description">
+  <title id="title">Laravel Exception Notifier</title>
+  <desc id="description">Exception emails with request details and stack traces. Legacy, Bootstrap 5, and Tailwind layouts.</desc>
+  <rect x="1" y="1" width="798" height="218" rx="16" fill="#101827" stroke="#35455c"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif">
+    <rect x="32" y="30" width="40" height="40" rx="10" fill="#38262f"/>
+    <g fill="none" stroke="#ffa6a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="41" y="42" width="22" height="16" rx="3"/>
+      <path d="m42 44 10 7 10-7"/>
+    </g>
+    <text x="84" y="55" fill="#ffa6a0" font-size="12" font-weight="700" letter-spacing="1.5">LARAVEL PACKAGE</text>
+    <text x="32" y="109" fill="#edf2f7" font-size="30" font-weight="700">Laravel Exception Notifier</text>
+    <text x="32" y="138" fill="#b4c2d3" font-size="15">Exception details, delivered to your inbox.</text>
+    <g font-size="12" font-weight="600" text-anchor="middle">
+      <rect x="32" y="166" width="70" height="26" rx="13" fill="#1b2738" stroke="#35455c"/>
+      <text x="67" y="183" fill="#b4c2d3">Legacy</text>
+      <rect x="110" y="166" width="104" height="26" rx="13" fill="#1b2738" stroke="#35455c"/>
+      <text x="162" y="183" fill="#b4c2d3">Bootstrap 5</text>
+      <rect x="222" y="166" width="84" height="26" rx="13" fill="#1b2738" stroke="#35455c"/>
+      <text x="264" y="183" fill="#b4c2d3">Tailwind</text>
+    </g>
+    <rect x="540" y="30" width="228" height="162" rx="10" fill="#1b2738" stroke="#35455c"/>
+    <path d="M551 31h206" stroke="#ffa6a0" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="562" cy="55" r="4" fill="#ffa6a0"/>
+    <text x="575" y="59" fill="#ffa6a0" font-size="10" font-weight="700" letter-spacing="1">EXCEPTION REPORTED</text>
+    <text x="557" y="87" fill="#edf2f7" font-size="14" font-weight="600">Request details</text>
+    <path d="M557 101h157 M557 113h110" stroke="#35455c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M541 128h226" stroke="#35455c"/>
+    <text x="557" y="149" fill="#b4c2d3" font-size="11" font-weight="600">STACK TRACE</text>
+    <text x="557" y="174" fill="#ffa6a0" font-family="Consolas, monospace" font-size="12">#1</text>
+    <path d="M582 170h157" stroke="#35455c" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="art/banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="art/banner-light.svg">
+    <img alt="Laravel Exception Notifier" src="art/banner-light.svg" width="800">
+  </picture>
+</p>
+
 # Laravel Exception Notifier
 
 Send Laravel exception emails with the message, request URL, IP address, and stack trace.
@@ -5,6 +13,7 @@ Send Laravel exception emails with the message, request URL, IP address, and sta
 [![Tests](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml/badge.svg)](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml)
 [![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
 [![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
+[![Code Style](https://github.styleci.io/repos/91833181/shield?branch=master)](https://github.styleci.io/repos/91833181)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 <picture>

@@ -39,6 +39,7 @@ jobs:
           - { laravel: '13', testbench: '^11.0', php: '8.4', dependencies: highest }
           - { laravel: '13', testbench: '^11.0', php: '8.5', dependencies: highest }
           - { laravel: '9', testbench: '^7.0', php: '8.0', dependencies: lowest }
+          - { laravel: '9', framework: '9.20.0', testbench: '7.0.0', php: '8.1', dependencies: '9.20.0' }
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
@@ -48,7 +49,7 @@ jobs:
           coverage: none
           tools: composer:v2
       - name: Select Laravel version
-        run: composer require --dev --no-update 'laravel/framework:${{ matrix.laravel }}.*' 'orchestra/testbench:${{ matrix.testbench }}'
+        run: composer require --dev --no-update 'laravel/framework:${{ matrix.framework || format('{0}.*', matrix.laravel) }}' 'orchestra/testbench:${{ matrix.testbench }}'
       - name: Allow historical dependencies for compatibility tests
         if: matrix.laravel == '9' || matrix.laravel == '10' || matrix.laravel == '11' || matrix.dependencies == 'lowest'
         run: composer config audit.block-insecure false

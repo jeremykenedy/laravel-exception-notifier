@@ -46,8 +46,8 @@ Open `http://127.0.0.1:8765/bootstrap5-light.html` or `tailwind-dark.html`. The 
 | 12 | 10 | 8.2, 8.3, 8.4, 8.5 |
 | 13 | 11 | 8.3, 8.4, 8.5 |
 
-A separate lowest-dependency run covers Laravel 9 on PHP 8.0. Historical jobs allow advisory-affected dependency versions only in their temporary CI checkouts so backward compatibility can be tested. The latest-stack quality job retains Composer's security blocking, runs Composer/npm audits, and fails on PHP deprecations.
+A separate lowest-dependency run covers Laravel 9 on PHP 8.0. A pinned Laravel 9.20.0 run covers the transition where mail value objects exist but delivery still requires `build()`. Historical jobs allow advisory-affected dependency versions only in their temporary CI checkouts so backward compatibility can be tested. The latest-stack quality job retains Composer's security blocking, runs Composer/npm audits, and fails on PHP deprecations.
 
 Actions have read-only repository permissions, pinned revisions, concurrency cancellation, and timeouts. Dependabot checks development dependencies and action revisions monthly.
 
-Scrutinizer explicitly uses PHP 8.3 and Composer dependencies, runs the PHP suite, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. This avoids the service's inferred PHP 8.0/Node 10 environment, which cannot install the current secure dependency set.
+Scrutinizer explicitly uses PHP 8.3.12 and Composer dependencies, runs the PHP suite, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. The explicit patch version selects an available runtime archive from Scrutinizer's mirror.

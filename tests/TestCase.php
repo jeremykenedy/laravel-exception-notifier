@@ -20,18 +20,18 @@ class TestCase extends OrchestraTestCase
     {
         $this->sandbox = sys_get_temp_dir().'/exception-notifier-'.bin2hex(random_bytes(8));
         $files = new Filesystem;
-        foreach (['app', 'config', 'resources/views', 'bootstrap/cache'] as $path) {
+        foreach (['app', 'config', 'resources/views', 'bootstrap/cache', 'storage/framework/views', 'storage/logs'] as $path) {
             $files->makeDirectory($this->sandbox.'/'.$path, 0755, true);
         }
         $app->useAppPath($this->sandbox.'/app');
-        $bootstrap = $app->bootstrapPath();
-        $storage = $app->storagePath();
         $app->setBasePath($this->sandbox);
         if (method_exists($app, 'useBootstrapPath')) {
-            $app->useBootstrapPath($bootstrap);
+            $app->useBootstrapPath($this->sandbox.'/bootstrap');
         }
-        $app->useStoragePath($storage);
+        $app->useStoragePath($this->sandbox.'/storage');
         $app['config']->set('view.paths', [$this->sandbox.'/resources/views']);
+        $app['config']->set('view.compiled', $this->sandbox.'/storage/framework/views');
+        $app['config']->set('logging.channels.single.path', $this->sandbox.'/storage/logs/laravel.log');
         $app['config']->set('mail.default', 'array');
         $app['config']->set('mail.mailers.array', ['transport' => 'array']);
         $app['config']->set('mail.from', ['address' => 'app@example.com', 'name' => 'Example']);
