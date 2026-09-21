@@ -4,6 +4,7 @@ namespace jeremykenedy\laravelexceptionnotifier\Support;
 
 use Illuminate\Filesystem\Filesystem;
 use RuntimeException;
+use Throwable;
 
 class EmailFiles
 {
@@ -16,10 +17,17 @@ class EmailFiles
         $path = resource_path('views/emails/exception.blade.php');
         $this->ensureReplacementAllowed($path, $layout, $force);
         $messages = $this->backupView($path, $layout);
-        $messages = array_merge($messages, $this->publishMissingFiles());
-        $messages[] = $this->publishView($path, $layout, $theme);
+        $created = [];
+        try {
+            $messages = array_merge($messages, $this->publishMissingFiles($created));
+            $messages[] = $this->publishView($path, $layout, $theme);
 
-        return $messages;
+            return $messages;
+        } catch (Throwable $exception) {
+            $this->files->delete($created);
+
+            throw $exception;
+        }
     }
 
     private function ensureReplacementAllowed(string $path, ?string $layout, bool $force): void
@@ -43,7 +51,7 @@ class EmailFiles
         return ['Backup saved to '.$backup];
     }
 
-    private function publishMissingFiles(): array
+    private function publishMissingFiles(array &$created): array
     {
         $source = dirname(__DIR__);
         $messages = [];
@@ -58,6 +66,7 @@ class EmailFiles
             }
 
             $this->files->ensureDirectoryExists(dirname($to));
+            $created[] = $to;
             if (! $this->files->copy($from, $to)) {
                 throw new RuntimeException('Unable to write '.$to);
             }

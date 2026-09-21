@@ -168,6 +168,40 @@ class CommandsTest extends TestCase
         $this->assertFileDoesNotExist(resource_path('views/emails/exception.blade.php'));
     }
 
+    public function test_failed_view_write_removes_only_files_created_during_the_attempt(): void
+    {
+        $path = resource_path('views/emails/exception.blade.php');
+        mkdir(dirname($path), 0755, true);
+        file_put_contents($path, 'Custom view');
+        file_put_contents(config_path('exceptions.php'), 'Custom configuration');
+        $files = \Mockery::mock(Filesystem::class)->makePartial();
+        $files->shouldReceive('put')->once()->andReturn(false);
+        $this->app->instance(Filesystem::class, $files);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
+        $this->assertSame('Custom view', file_get_contents($path));
+        $this->assertSame('Custom configuration', file_get_contents(config_path('exceptions.php')));
+        $this->assertFileDoesNotExist(app_path('Mail/ExceptionOccurred.php'));
+        $this->assertSame([], glob($path.'.*.tmp'));
+        $this->assertSame('Custom view', file_get_contents(glob($path.'.*.bak')[0]));
+    }
+
+    public function test_failed_copy_removes_partial_files_and_previously_created_files(): void
+    {
+        $files = \Mockery::mock(Filesystem::class)->makePartial();
+        $files->shouldReceive('copy')->once()->withArgs(function ($source, $destination) {
+            return $destination === config_path('exceptions.php');
+        })->andReturnUsing(function ($source, $destination) {
+            file_put_contents($destination, 'Partial copy');
+
+            return false;
+        });
+        $this->app->instance(Filesystem::class, $files);
+        $this->artisan('exception-notifier:install', ['--layout' => 'modern', '--no-interaction' => true])->assertExitCode(1);
+        $this->assertFileDoesNotExist(config_path('exceptions.php'));
+        $this->assertFileDoesNotExist(app_path('Mail/ExceptionOccurred.php'));
+        $this->assertFileDoesNotExist(resource_path('views/emails/exception.blade.php'));
+    }
+
     public function test_explicit_legacy_light_selection_overrides_configured_dark_mode(): void
     {
         config()->set('exceptions.emailExceptionTheme', 'dark');
