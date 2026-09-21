@@ -78,6 +78,8 @@ jobs:
       - run: composer lint
       - run: composer audit
       - run: vendor/bin/phpunit --configuration phpunit.coverage.xml --coverage-clover build/coverage.xml
+        env:
+          XDEBUG_MODE: coverage
       - run: bash tests/integration/install.sh
       - run: npm ci --ignore-scripts
       - run: npm audit

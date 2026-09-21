@@ -15,6 +15,10 @@ use Throwable;
 
 trait ExceptionNotificationHandlerTrait
 {
+    abstract public function ignore(string $class);
+
+    abstract public function reportable(callable $reportUsing);
+
     /**
      * Register the exception handling callbacks for the application.
      */

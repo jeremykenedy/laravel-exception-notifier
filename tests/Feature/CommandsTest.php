@@ -110,10 +110,10 @@ class CommandsTest extends TestCase
         $this->assertSame('Custom mailer', file_get_contents(app_path('Mail/ExceptionOccurred.php')));
     }
 
-    public function test_failed_backup_leaves_the_existing_view_untouched(): void
+    public function test_failed_backup_does_not_change_any_application_files(): void
     {
-        $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
         $path = resource_path('views/emails/exception.blade.php');
+        mkdir(dirname($path), 0755, true);
         file_put_contents($path, 'Custom view');
         $files = \Mockery::mock(Filesystem::class)->makePartial();
         $files->shouldReceive('copy')->once()->withArgs(function ($source, $destination) use ($path) {
@@ -122,6 +122,41 @@ class CommandsTest extends TestCase
         $this->app->instance(Filesystem::class, $files);
         $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
         $this->assertSame('Custom view', file_get_contents($path));
+        $this->assertFileDoesNotExist(config_path('exceptions.php'));
+        $this->assertFileDoesNotExist(app_path('Mail/ExceptionOccurred.php'));
+    }
+
+    public function test_incomplete_view_writes_preserve_the_original_and_remove_temporary_files(): void
+    {
+        $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
+        $path = resource_path('views/emails/exception.blade.php');
+        file_put_contents($path, 'Custom view');
+        $files = \Mockery::mock(Filesystem::class)->makePartial();
+        $files->shouldReceive('put')->once()->andReturnUsing(function ($temporary, $contents) {
+            return file_put_contents($temporary, substr($contents, 0, 10));
+        });
+        $files->shouldNotReceive('move');
+        $this->app->instance(Filesystem::class, $files);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
+        $this->assertSame('Custom view', file_get_contents($path));
+        $this->assertSame([], glob($path.'.*.tmp'));
+        $this->assertCount(1, glob($path.'.*.bak'));
+        $this->assertSame('Custom view', file_get_contents(glob($path.'.*.bak')[0]));
+    }
+
+    public function test_failed_view_replacement_preserves_the_original_and_removes_temporary_files(): void
+    {
+        $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
+        $path = resource_path('views/emails/exception.blade.php');
+        file_put_contents($path, 'Custom view');
+        $files = \Mockery::mock(Filesystem::class)->makePartial();
+        $files->shouldReceive('move')->once()->andReturn(false);
+        $this->app->instance(Filesystem::class, $files);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
+        $this->assertSame('Custom view', file_get_contents($path));
+        $this->assertSame([], glob($path.'.*.tmp'));
+        $this->assertCount(1, glob($path.'.*.bak'));
+        $this->assertSame('Custom view', file_get_contents(glob($path.'.*.bak')[0]));
     }
 
     public function test_failed_copy_returns_failure_without_installing_a_view(): void
