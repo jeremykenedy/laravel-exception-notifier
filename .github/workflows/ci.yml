@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   tests:
-    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / ${{ matrix.dependencies }}
+    name: Laravel ${{ matrix.framework || matrix.laravel }} / PHP ${{ matrix.php }} / ${{ matrix.dependencies }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -39,7 +39,7 @@ jobs:
           - { laravel: '13', testbench: '^11.0', php: '8.4', dependencies: highest }
           - { laravel: '13', testbench: '^11.0', php: '8.5', dependencies: highest }
           - { laravel: '9', testbench: '^7.0', php: '8.0', dependencies: lowest }
-          - { laravel: '9', framework: '9.20.0', testbench: '7.0.0', php: '8.1', dependencies: '9.20.0' }
+          - { laravel: '9', framework: '9.20.0', testbench: '7.0.0', php: '8.1', dependencies: lowest }
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
