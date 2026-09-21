@@ -1,0 +1,37 @@
+build:
+  environment:
+    php:
+      version: '8.3.12'
+  dependencies:
+    override:
+      - composer install --no-interaction --prefer-dist --no-scripts
+  nodes:
+    analysis:
+      dependencies:
+        after: []
+      tests:
+        override:
+          - composer test
+          - composer lint
+          - php-scrutinizer-run
+
+checks:
+  php: true
+
+build_failure_conditions:
+  - 'elements.rating(<= B).exists'
+  - 'issues.exists'
+
+coding_style:
+  php:
+    spaces:
+      before_parentheses:
+        closure_definition: true
+
+filter:
+  excluded_paths:
+    - tests/
+    - scripts/
+    - src/resources/
+  dependency_paths:
+    - vendor/

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200" role="img" aria-labelledby="title description">
+  <title id="title">Laravel Exception Notifier</title>
+  <desc id="description">Exception emails with request details, stack traces, and dark mode.</desc>
+  <rect width="800" height="200" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="32" y="80" fill="#0f172a" font-size="40" font-weight="700" letter-spacing="-.5">Laravel Exception Notifier</text>
+    <text x="32" y="110" fill="#64748b" font-size="14">Exception details, delivered to your inbox.</text>
+    <g font-size="10" font-weight="500" text-anchor="middle">
+      <rect x="32" y="133" width="88" height="22" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width=".8"/>
+      <text x="76" y="148" fill="#b91c1c">Email alerts</text>
+      <rect x="128" y="133" width="88" height="22" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width=".8"/>
+      <text x="172" y="148" fill="#1e40af">Stack traces</text>
+      <rect x="224" y="133" width="82" height="22" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width=".8"/>
+      <text x="265" y="148" fill="#6d28d9">Dark mode</text>
+    </g>
+    <g transform="translate(570, 34)">
+      <rect width="198" height="132" rx="10" fill="#fff" stroke="#e5e7eb"/>
+      <path d="M11 1h176" stroke="#b91c1c" stroke-width="3" stroke-linecap="round"/>
+      <g fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="16" y="17" width="20" height="14" rx="2"/>
+        <path d="m17 19 9 6 9-6"/>
+      </g>
+      <text x="45" y="28" fill="#b91c1c" font-size="9" font-weight="700" letter-spacing=".5">EXCEPTION REPORTED</text>
+      <text x="16" y="56" fill="#0f172a" font-size="13" font-weight="600">Request details</text>
+      <path d="M18 70h158 M18 81h109" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round"/>
+      <path d="M1 94h196" stroke="#e5e7eb"/>
+      <text x="16" y="115" fill="#b91c1c" font-family="Consolas, monospace" font-size="11">#1</text>
+      <path d="M40 112h136" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

@@ -3,31 +3,38 @@
 namespace App\Traits;
 
 use App\Mail\ExceptionOccurred;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 trait ExceptionNotificationHandlerTrait
 {
-    /**
-     * A list of the exception types that should not be reported.
-     *
-     * @var array
-     */
-    protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
-        \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-        \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
-    ];
+    abstract public function ignore(string $class);
+
+    abstract public function reportable(callable $reportUsing);
 
     /**
      * Register the exception handling callbacks for the application.
      */
     public function register(): void
     {
+        foreach ([
+            AuthenticationException::class,
+            AuthorizationException::class,
+            HttpException::class,
+            ModelNotFoundException::class,
+            TokenMismatchException::class,
+            ValidationException::class,
+        ] as $exception) {
+            $this->ignore($exception);
+        }
+
         $this->reportable(function (Throwable $e) {
             $enableEmailExceptions = config('exceptions.emailExceptionEnabled');
 

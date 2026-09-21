@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200" role="img" aria-labelledby="title description">
+  <title id="title">Laravel Exception Notifier</title>
+  <desc id="description">Exception emails with request details, stack traces, and dark mode.</desc>
+  <defs><linearGradient id="background" x2="1" y2="1"><stop stop-color="#0c0a09"/><stop offset="1" stop-color="#1c1917"/></linearGradient></defs>
+  <rect width="800" height="200" rx="16" fill="url(#background)"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="32" y="80" fill="#fff" font-size="40" font-weight="700" letter-spacing="-.5">Laravel Exception Notifier</text>
+    <text x="32" y="110" fill="#a8a29e" font-size="14">Exception details, delivered to your inbox.</text>
+    <g font-size="10" font-weight="500" text-anchor="middle">
+      <rect x="32" y="133" width="88" height="22" rx="11" fill="#1a1a1a" stroke="#f87171" stroke-width=".8" opacity=".8"/>
+      <text x="76" y="148" fill="#f87171">Email alerts</text>
+      <rect x="128" y="133" width="88" height="22" rx="11" fill="#1a1a1a" stroke="#60a5fa" stroke-width=".8" opacity=".8"/>
+      <text x="172" y="148" fill="#60a5fa">Stack traces</text>
+      <rect x="224" y="133" width="82" height="22" rx="11" fill="#1a1a1a" stroke="#a78bfa" stroke-width=".8" opacity=".8"/>
+      <text x="265" y="148" fill="#a78bfa">Dark mode</text>
+    </g>
+    <g transform="translate(570, 34)">
+      <rect width="198" height="132" rx="10" fill="#1c1917" stroke="#44403c"/>
+      <path d="M11 1h176" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>
+      <g fill="none" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="16" y="17" width="20" height="14" rx="2"/>
+        <path d="m17 19 9 6 9-6"/>
+      </g>
+      <text x="45" y="28" fill="#f87171" font-size="9" font-weight="700" letter-spacing=".5">EXCEPTION REPORTED</text>
+      <text x="16" y="56" fill="#fff" font-size="13" font-weight="600">Request details</text>
+      <path d="M18 70h158 M18 81h109" stroke="#44403c" stroke-width="4" stroke-linecap="round"/>
+      <path d="M1 94h196" stroke="#44403c"/>
+      <text x="16" y="115" fill="#f87171" font-family="Consolas, monospace" font-size="11">#1</text>
+      <path d="M40 112h136" stroke="#44403c" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
