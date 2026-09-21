@@ -1,33 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200" role="img" aria-labelledby="title description">
   <title id="title">Laravel Exception Notifier</title>
-  <desc id="description">Exception emails with request details and stack traces. Legacy, Bootstrap 5, and Tailwind layouts.</desc>
-  <rect x="1" y="1" width="798" height="218" rx="16" fill="#f8fafc" stroke="#dce3ec"/>
-  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif">
-    <rect x="32" y="30" width="40" height="40" rx="10" fill="#fcebed"/>
-    <g fill="none" stroke="#a82d35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="41" y="42" width="22" height="16" rx="3"/>
-      <path d="m42 44 10 7 10-7"/>
+  <desc id="description">Exception emails with request details, stack traces, and dark mode.</desc>
+  <rect width="800" height="200" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="32" y="80" fill="#0f172a" font-size="40" font-weight="700" letter-spacing="-.5">Laravel Exception Notifier</text>
+    <text x="32" y="110" fill="#64748b" font-size="14">Exception details, delivered to your inbox.</text>
+    <g font-size="10" font-weight="500" text-anchor="middle">
+      <rect x="32" y="133" width="88" height="22" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width=".8"/>
+      <text x="76" y="148" fill="#b91c1c">Email alerts</text>
+      <rect x="128" y="133" width="88" height="22" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width=".8"/>
+      <text x="172" y="148" fill="#1e40af">Stack traces</text>
+      <rect x="224" y="133" width="82" height="22" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width=".8"/>
+      <text x="265" y="148" fill="#6d28d9">Dark mode</text>
     </g>
-    <text x="84" y="55" fill="#a82d35" font-size="12" font-weight="700" letter-spacing="1.5">LARAVEL PACKAGE</text>
-    <text x="32" y="109" fill="#182437" font-size="30" font-weight="700">Laravel Exception Notifier</text>
-    <text x="32" y="138" fill="#526278" font-size="15">Exception details, delivered to your inbox.</text>
-    <g font-size="12" font-weight="600" text-anchor="middle">
-      <rect x="32" y="166" width="70" height="26" rx="13" fill="#ffffff" stroke="#dce3ec"/>
-      <text x="67" y="183" fill="#526278">Legacy</text>
-      <rect x="110" y="166" width="104" height="26" rx="13" fill="#ffffff" stroke="#dce3ec"/>
-      <text x="162" y="183" fill="#526278">Bootstrap 5</text>
-      <rect x="222" y="166" width="84" height="26" rx="13" fill="#ffffff" stroke="#dce3ec"/>
-      <text x="264" y="183" fill="#526278">Tailwind</text>
+    <g transform="translate(570, 34)">
+      <rect width="198" height="132" rx="10" fill="#fff" stroke="#e5e7eb"/>
+      <path d="M11 1h176" stroke="#b91c1c" stroke-width="3" stroke-linecap="round"/>
+      <g fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="16" y="17" width="20" height="14" rx="2"/>
+        <path d="m17 19 9 6 9-6"/>
+      </g>
+      <text x="45" y="28" fill="#b91c1c" font-size="9" font-weight="700" letter-spacing=".5">EXCEPTION REPORTED</text>
+      <text x="16" y="56" fill="#0f172a" font-size="13" font-weight="600">Request details</text>
+      <path d="M18 70h158 M18 81h109" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round"/>
+      <path d="M1 94h196" stroke="#e5e7eb"/>
+      <text x="16" y="115" fill="#b91c1c" font-family="Consolas, monospace" font-size="11">#1</text>
+      <path d="M40 112h136" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round"/>
     </g>
-    <rect x="540" y="30" width="228" height="162" rx="10" fill="#ffffff" stroke="#dce3ec"/>
-    <path d="M551 31h206" stroke="#a82d35" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="562" cy="55" r="4" fill="#a82d35"/>
-    <text x="575" y="59" fill="#a82d35" font-size="10" font-weight="700" letter-spacing="1">EXCEPTION REPORTED</text>
-    <text x="557" y="87" fill="#182437" font-size="14" font-weight="600">Request details</text>
-    <path d="M557 101h157 M557 113h110" stroke="#dce3ec" stroke-width="5" stroke-linecap="round"/>
-    <path d="M541 128h226" stroke="#dce3ec"/>
-    <text x="557" y="149" fill="#526278" font-size="11" font-weight="600">STACK TRACE</text>
-    <text x="557" y="174" fill="#a82d35" font-family="Consolas, monospace" font-size="12">#1</text>
-    <path d="M582 170h157" stroke="#dce3ec" stroke-width="5" stroke-linecap="round"/>
   </g>
 </svg>

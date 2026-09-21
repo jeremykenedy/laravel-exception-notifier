@@ -63,7 +63,6 @@ class ExceptionOccurred extends Mailable
             return $this;
         }
 
-        // Early Laravel 9 releases use build() instead of envelope()/content().
         $from = config('exceptions.emailExceptionFrom');
         $subject = config('exceptions.emailExceptionSubject');
         if ($from) {

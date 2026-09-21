@@ -2,7 +2,6 @@
     $theme = $theme ?? config('exceptions.emailExceptionTheme', 'light');
     $theme = in_array($theme, ['light', 'dark', 'system'], true) ? $theme : 'light';
     $dark = $theme === 'dark';
-    $bootstrap = ($framework ?? 'bootstrap5') === 'bootstrap5';
     $background = $dark ? '#101827' : '#f3f5f8';
     $surface = $dark ? '#1b2738' : '#ffffff';
     $foreground = $dark ? '#edf2f7' : '#182437';
@@ -11,7 +10,7 @@
     $accent = $dark ? '#ffa6a0' : '#a82d35';
 @endphp
 <!DOCTYPE html>
-<html lang="en" @if($bootstrap) data-bs-theme="{{ $dark ? 'dark' : 'light' }}" @else class="{{ $dark ? 'dark' : 'light' }}" @endif>
+<html lang="en" data-theme="{{ $dark ? 'dark' : 'light' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,16 +41,16 @@
         @endif
     </style>
 </head>
-<body class="exception-email {{ $bootstrap ? 'bg-body-tertiary' : 'bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100' }}" style="background: {{ $background }}; color: {{ $foreground }}; font: 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; padding: 40px 20px;">
-    <main class="email-frame {{ $bootstrap ? 'container' : 'mx-auto max-w-4xl' }}">
-        <p class="email-muted {{ $bootstrap ? 'small text-uppercase' : 'text-xs uppercase tracking-widest' }}" style="color: {{ $muted }}; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin: 0 0 20px;">{{ config('app.name', 'Laravel') }} / Exception notification</p>
-        <section class="email-card {{ $bootstrap ? 'card shadow-sm' : 'rounded-xl border bg-white dark:bg-slate-800' }}" style="background: {{ $surface }}; border: 1px solid {{ $border }};">
-            <header class="email-section {{ $bootstrap ? 'card-header' : 'px-8 py-6' }}" style="padding: 28px 32px; border-top: 4px solid {{ $accent }};">
-                <p class="email-accent {{ $bootstrap ? 'small fw-semibold' : 'text-xs font-semibold' }}" style="color: {{ $accent }}; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin: 0 0 12px;">APPLICATION ERROR</p>
+<body class="exception-email" style="background: {{ $background }}; color: {{ $foreground }}; font: 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; padding: 40px 20px;">
+    <main class="email-frame">
+        <p class="email-muted" style="color: {{ $muted }}; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin: 0 0 20px;">{{ config('app.name', 'Laravel') }} / Exception notification</p>
+        <section class="email-card" style="background: {{ $surface }}; border: 1px solid {{ $border }};">
+            <header class="email-section" style="padding: 28px 32px; border-top: 4px solid {{ $accent }};">
+                <p class="email-accent" style="color: {{ $accent }}; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin: 0 0 12px;">APPLICATION ERROR</p>
                 <h1 style="font-size: 28px; font-weight: 650; line-height: 1.3; margin: 0;">{{ $content['message'] ?? 'Exception reported' }}</h1>
                 <p class="email-path email-muted" style="color: {{ $muted }}; margin: 16px 0 0;">{{ $content['file'] ?? '' }}<br>Line {{ $content['line'] ?? '' }}</p>
             </header>
-            <section aria-label="Request details" class="email-section email-divider {{ $bootstrap ? 'card-body' : 'px-8 py-6 border-t' }}" style="padding: 24px 32px; border-top: 1px solid {{ $border }};">
+            <section aria-label="Request details" class="email-section email-divider" style="padding: 24px 32px; border-top: 1px solid {{ $border }};">
                 <h2 style="font-size: 16px; margin: 0 0 16px;">Request details</h2>
                 <dl style="margin: 0;">
                     <dt class="email-muted" style="color: {{ $muted }}; font-size: 12px; font-weight: 700;">URL</dt>

@@ -29,21 +29,21 @@ If you copy the trait into your application, review and apply this change there.
 ## Switching the email layout
 
 ```bash
-php artisan exception-notifier:update --framework=bootstrap5 --theme=system --force
+php artisan exception-notifier:update --layout=modern --theme=system --force
 php artisan view:clear
 ```
 
 The command saves the current `resources/views/emails/exception.blade.php` to a unique adjacent `.bak` file, then installs a wrapper for the selected package template. A failed backup prevents replacement. Repeated switches create separate backups.
 
-The modern wrappers follow the package's template updates. If you need to pin or customize their markup, copy the relevant templates to Laravel's namespaced override directory, `resources/views/vendor/laravelexceptionnotifier/emails/`.
+The modern wrapper follows the package's template updates. If you need to pin or customize its markup, copy the relevant templates to Laravel's namespaced override directory, `resources/views/vendor/laravelexceptionnotifier/emails/`.
 
 If `exceptions.emailExceptionView` points to a custom view, it continues to do so. To use the installed wrapper, explicitly set that configuration value to `emails.exception` and rebuild your configuration cache.
 
-An installation without a layout selection publishes the complete legacy Blade file and follows the theme configuration. Explicit layout selections, including `--framework=legacy --theme=light`, install a wrapper that fixes the chosen theme. Existing published views stay unchanged until explicitly replaced.
+An installation without a layout selection publishes the complete legacy Blade file and follows the theme configuration. Explicit layout selections, including `--layout=legacy --theme=light`, install a wrapper that fixes the chosen theme. Existing published views stay unchanged until explicitly replaced.
 
 ## Rollback
 
-Restore the saved `.bak` file to `resources/views/emails/exception.blade.php` and run `php artisan view:clear`. Alternatively, select `--framework=legacy --theme=light --force`; this installs the current legacy source and preserves another backup.
+Restore the saved `.bak` file to `resources/views/emails/exception.blade.php` and run `php artisan view:clear`. Alternatively, select `--layout=legacy --theme=light --force`; this installs the current legacy source and preserves another backup.
 
 If you changed `exceptions.emailExceptionView` separately, restore that setting and rebuild the configuration cache. No database rollback is needed.
 

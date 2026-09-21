@@ -26,7 +26,7 @@ if (!str_contains($message->getHtmlBody(), "Installation smoke test")) {
 }
 '
 
-php artisan exception-notifier:update --framework=tailwind --theme=dark --force --no-interaction
+php artisan exception-notifier:update --layout=modern --theme=dark --force --no-interaction
 php artisan config:cache
 php artisan view:cache
 
@@ -46,18 +46,3 @@ if ($before !== $after) {
 }
 '
 echo 'Fresh application installation and cached update passed.'
-
-php artisan config:clear
-composer require jeremykenedy/laravel-ui-kit:^2.0 --no-interaction
-php artisan exception-notifier:update --ui-kit --theme=dark --force --no-interaction
-php artisan view:clear
-php -r '
-require "vendor/autoload.php";
-$app = require "bootstrap/app.php";
-$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-$html = view("emails.exception", ["content" => ["message" => "UI Kit integration"]])->render();
-if (!str_contains($html, "UI Kit integration") || !str_contains($html, "dark:bg-slate-900")) {
-    exit(1);
-}
-'
-echo 'Optional UI Kit integration passed.'

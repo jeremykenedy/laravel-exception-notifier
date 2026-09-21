@@ -9,7 +9,7 @@ Run `composer test` after `composer install`. Orchestra Testbench provides an is
 - The existing Handler trait's enabled switch and failure logging.
 - All layouts and themes, missing fields, internal stack frames, and untrusted HTML.
 - Installation/update options, interactive choices, invalid inputs, repeated backups, and rollback to legacy.
-- Optional UI Kit configuration and preservation of application mailers/configuration.
+- Preservation of application mailers and configuration during layout changes.
 
 Run `composer lint` to check the Laravel Pint rules and `composer format` to apply them.
 
@@ -21,7 +21,7 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-Playwright starts a loopback-only PHP server on port 8765. `scripts/render-previews.php` renders synthetic data through Blade into `build/previews`. All layouts are tested at 375px and 1200px in light, dark, and system themes. Further cases check live system-theme changes and long exception data. The modern layouts are checked with axe against WCAG A/AA rules.
+Playwright starts a loopback-only PHP server on port 8765. `scripts/render-previews.php` renders synthetic data through Blade into `build/previews`. All layouts are tested at 375px and 1200px in light, dark, and system themes. Further cases check live system-theme changes and long exception data. The modern layout is checked with axe against WCAG A/AA rules.
 
 Screenshots and the HTML report are written under `build/`. CI uploads them along with the PHP coverage report. `phpunit.coverage.xml` measures executable package PHP; Blade templates are covered by rendering and browser assertions instead. For manual inspection, run:
 
@@ -30,11 +30,11 @@ php scripts/render-previews.php
 php -S 127.0.0.1:8765 -t build/previews
 ```
 
-Open `http://127.0.0.1:8765/bootstrap5-light.html` or `tailwind-dark.html`. The sample URL and IP address are reserved examples.
+Open `http://127.0.0.1:8765/modern-light.html` or `modern-dark.html`. The sample URL and IP address are reserved examples.
 
 ## Fresh application integration
 
-`bash tests/integration/install.sh` creates a temporary Laravel 13 application, installs this checkout through a Composer path repository, verifies package discovery and mail delivery, compiles views/configuration, and confirms that a Composer update preserves published file hashes. It also installs the released UI Kit package and verifies optional framework selection. It removes its temporary application on exit and runs in the current-stack CI job.
+`bash tests/integration/install.sh` creates a temporary Laravel 13 application, installs this checkout through a Composer path repository, verifies package discovery and mail delivery, compiles views/configuration, and confirms that a Composer update preserves published file hashes. It removes its temporary application on exit and runs in the current-stack CI job.
 
 ## CI matrix
 
@@ -50,4 +50,6 @@ A separate lowest-dependency run covers Laravel 9 on PHP 8.0. A pinned Laravel 9
 
 Actions have read-only repository permissions, pinned revisions, concurrency cancellation, and timeouts. Dependabot checks development dependencies and action revisions monthly.
 
-Scrutinizer explicitly uses PHP 8.3.12 and Composer dependencies, runs the PHP suite, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. The explicit patch version selects an available runtime archive from Scrutinizer's mirror.
+Scrutinizer explicitly uses PHP 8.3.12 and Composer dependencies, runs the PHP suite and Pint, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. The explicit patch version selects an available runtime archive from Scrutinizer's mirror.
+
+The analysis node overrides the website's historical PHP_CodeSniffer 2.9 installation hook. Pint provides the Laravel style checks without adding an obsolete dependency.

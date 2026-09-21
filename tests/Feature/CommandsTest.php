@@ -34,29 +34,29 @@ class CommandsTest extends TestCase
         $this->assertSame([], glob(resource_path('views/emails/*.bak')));
     }
 
-    public function test_framework_switch_requires_force_and_backs_up_the_original(): void
+    public function test_layout_switch_requires_force_and_backs_up_the_original(): void
     {
         $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
         $path = resource_path('views/emails/exception.blade.php');
         file_put_contents($path, 'Custom layout');
-        $this->artisan('exception-notifier:update', ['--framework' => 'tailwind', '--no-interaction' => true])->assertExitCode(1);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--no-interaction' => true])->assertExitCode(1);
         $this->assertSame('Custom layout', file_get_contents($path));
         $this->artisan('exception-notifier:update', [
-            '--framework' => 'tailwind', '--theme' => 'dark', '--force' => true, '--no-interaction' => true,
+            '--layout' => 'modern', '--theme' => 'dark', '--force' => true, '--no-interaction' => true,
         ])->assertExitCode(0);
         $backups = glob($path.'.*.bak');
         $this->assertCount(1, $backups);
         $this->assertSame('Custom layout', file_get_contents($backups[0]));
-        $this->assertStringContainsString('emails.tailwind', file_get_contents($path));
+        $this->assertStringContainsString('emails.modern', file_get_contents($path));
         $this->assertStringContainsString("'theme' => 'dark'", file_get_contents($path));
         $html = view('emails.exception', ['content' => $this->content()])->render();
-        $this->assertStringContainsString('class="dark"', $html);
+        $this->assertStringContainsString('data-theme="dark"', $html);
         $this->assertStringContainsString('Stack trace', $html);
     }
 
     public function test_invalid_options_do_not_write_any_files(): void
     {
-        foreach ([['--framework' => 'invalid'], ['--theme' => 'invalid'], ['--theme' => 'dark']] as $options) {
+        foreach ([['--layout' => 'invalid'], ['--theme' => 'invalid'], ['--theme' => 'dark']] as $options) {
             $this->artisan('exception-notifier:install', $options + ['--no-interaction' => true])->assertExitCode(1);
             $this->assertFileDoesNotExist(config_path('exceptions.php'));
             $this->assertFileDoesNotExist(app_path('Mail/ExceptionOccurred.php'));
@@ -64,14 +64,14 @@ class CommandsTest extends TestCase
         }
     }
 
-    public function test_interactive_install_can_select_a_framework_and_theme(): void
+    public function test_interactive_install_can_select_a_layout_and_theme(): void
     {
         $this->artisan('exception-notifier:install')
-            ->expectsChoice('Email layout', 'bootstrap5', ['keep', 'legacy', 'bootstrap5', 'tailwind'])
+            ->expectsChoice('Email layout', 'modern', ['keep', 'legacy', 'modern'])
             ->expectsChoice('Email color scheme', 'system', ['light', 'dark', 'system'])
             ->assertExitCode(0);
         $html = view('emails.exception', ['content' => $this->content()])->render();
-        $this->assertStringContainsString('data-bs-theme="light"', $html);
+        $this->assertStringContainsString('data-theme="light"', $html);
         $this->assertStringContainsString('prefers-color-scheme: dark', $html);
     }
 
@@ -80,7 +80,7 @@ class CommandsTest extends TestCase
         $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
         file_put_contents(resource_path('views/emails/exception.blade.php'), 'Custom layout');
         $this->artisan('exception-notifier:update')
-            ->expectsChoice('Email layout', 'keep', ['keep', 'legacy', 'bootstrap5', 'tailwind'])
+            ->expectsChoice('Email layout', 'keep', ['keep', 'legacy', 'modern'])
             ->assertExitCode(0);
         $this->assertSame('Custom layout', file_get_contents(resource_path('views/emails/exception.blade.php')));
     }
@@ -88,15 +88,15 @@ class CommandsTest extends TestCase
     public function test_switching_back_to_legacy_and_repeated_backups_preserve_each_version(): void
     {
         $path = resource_path('views/emails/exception.blade.php');
-        $this->artisan('exception-notifier:install', ['--framework' => 'bootstrap5', '--no-interaction' => true])->assertExitCode(0);
-        $bootstrap = file_get_contents($path);
-        $this->artisan('exception-notifier:update', ['--framework' => 'tailwind', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
-        $tailwind = file_get_contents($path);
-        $this->artisan('exception-notifier:update', ['--framework' => 'legacy', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
+        $this->artisan('exception-notifier:install', ['--layout' => 'modern', '--no-interaction' => true])->assertExitCode(0);
+        $light = file_get_contents($path);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--theme' => 'dark', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
+        $dark = file_get_contents($path);
+        $this->artisan('exception-notifier:update', ['--layout' => 'legacy', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
         $backups = array_map('file_get_contents', glob($path.'.*.bak'));
         $this->assertCount(2, $backups);
-        $this->assertContains($bootstrap, $backups);
-        $this->assertContains($tailwind, $backups);
+        $this->assertContains($light, $backups);
+        $this->assertContains($dark, $backups);
         $this->assertStringContainsString('exception-summary', view('emails.exception', ['content' => []])->render());
     }
 
@@ -105,35 +105,9 @@ class CommandsTest extends TestCase
         $this->artisan('exception-notifier:install', ['--no-interaction' => true])->assertExitCode(0);
         file_put_contents(config_path('exceptions.php'), '<?php return ["emailExceptionView" => "custom"];');
         file_put_contents(app_path('Mail/ExceptionOccurred.php'), 'Custom mailer');
-        $this->artisan('exception-notifier:update', ['--framework' => 'bootstrap5', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(0);
         $this->assertSame('<?php return ["emailExceptionView" => "custom"];', file_get_contents(config_path('exceptions.php')));
         $this->assertSame('Custom mailer', file_get_contents(app_path('Mail/ExceptionOccurred.php')));
-    }
-
-    public function test_ui_kit_is_optional_and_reads_only_its_explicit_configuration(): void
-    {
-        $this->artisan('exception-notifier:install', ['--ui-kit' => true, '--no-interaction' => true])->assertExitCode(1);
-        $this->assertFileDoesNotExist(config_path('exceptions.php'));
-        config()->set('ui-kit', ['css_framework' => 'tailwind', 'dark_mode' => ['enabled' => true, 'default' => 'dark']]);
-        $before = config('ui-kit');
-        $this->artisan('exception-notifier:install', ['--ui-kit' => true, '--no-interaction' => true])->assertExitCode(0);
-        $html = view('emails.exception', ['content' => []])->render();
-        $this->assertStringContainsString('class="dark"', $html);
-        $this->assertSame($before, config('ui-kit'));
-        $this->artisan('exception-notifier:update', ['--ui-kit' => true, '--framework' => 'legacy', '--no-interaction' => true])->assertExitCode(1);
-    }
-
-    public function test_ui_kit_can_disable_dark_mode_and_cannot_silently_choose_an_unsupported_framework(): void
-    {
-        config()->set('ui-kit.css_framework', 'bootstrap4');
-        $this->artisan('exception-notifier:install', ['--ui-kit' => true, '--no-interaction' => true])->assertExitCode(1);
-        $this->assertFileDoesNotExist(config_path('exceptions.php'));
-        config()->set('ui-kit.css_framework', 'bootstrap5');
-        config()->set('ui-kit.dark_mode.enabled', false);
-        $this->artisan('exception-notifier:install', ['--ui-kit' => true, '--no-interaction' => true])->assertExitCode(0);
-        $html = view('emails.exception', ['content' => []])->render();
-        $this->assertStringContainsString('data-bs-theme="light"', $html);
-        $this->assertStringNotContainsString('prefers-color-scheme: dark', $html);
     }
 
     public function test_failed_backup_leaves_the_existing_view_untouched(): void
@@ -146,7 +120,7 @@ class CommandsTest extends TestCase
             return $source === $path && str_ends_with($destination, '.bak');
         })->andReturn(false);
         $this->app->instance(Filesystem::class, $files);
-        $this->artisan('exception-notifier:update', ['--framework' => 'tailwind', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
+        $this->artisan('exception-notifier:update', ['--layout' => 'modern', '--force' => true, '--no-interaction' => true])->assertExitCode(1);
         $this->assertSame('Custom view', file_get_contents($path));
     }
 
@@ -163,7 +137,7 @@ class CommandsTest extends TestCase
     {
         config()->set('exceptions.emailExceptionTheme', 'dark');
         $this->artisan('exception-notifier:install', [
-            '--framework' => 'legacy', '--theme' => 'light', '--no-interaction' => true,
+            '--layout' => 'legacy', '--theme' => 'light', '--no-interaction' => true,
         ])->assertExitCode(0);
         $html = view('emails.exception', ['content' => []])->render();
         $this->assertStringContainsString('name="color-scheme" content="light"', $html);

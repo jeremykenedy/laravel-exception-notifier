@@ -27,4 +27,4 @@ The historical mailable is spelled `App\Mail\ExceptionOccured`. Use the Handler 
 - [Version 2.2.0 documentation](https://github.com/jeremykenedy/laravel-exception-notifier/tree/v2.2.0)
 - [Version 1.2.0 documentation](https://github.com/jeremykenedy/laravel-exception-notifier/tree/v1.2.0)
 
-Keep existing exception filters and reporting behavior when upgrading an application. Do not replace a customized mailer or Handler without reviewing the diff. Current Bootstrap 5, Tailwind, theme, and setup-command options are not backported to these releases.
+Keep existing exception filters and reporting behavior when upgrading an application. Do not replace a customized mailer or Handler without reviewing the diff. Current email layout, theme, and setup-command options are not backported to these releases.

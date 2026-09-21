@@ -7,9 +7,12 @@ build:
       - composer install --no-interaction --prefer-dist --no-scripts
   nodes:
     analysis:
+      dependencies:
+        after: []
       tests:
         override:
           - composer test
+          - composer lint
           - php-scrutinizer-run
 
 checks:

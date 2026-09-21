@@ -3,8 +3,8 @@
 ## Unreleased
 
 - Add install/update commands that preserve application files and back up explicit view replacements.
-- Keep the standalone Blade email as the default; add optional Bootstrap 5 and Tailwind layouts.
-- Add light, dark, and system themes and optional UI Kit configuration selection.
+- Keep the standalone Blade email as the default; add an optional modern email layout.
+- Add light, dark, and system email themes.
 - Fix long file paths overflowing the legacy email on mobile screens.
 - Support the original Laravel 9 mail builder API alongside the current envelope/content API.
 - Preserve CSV recipient parsing while avoiding PHP 8.4/8.5 deprecations.

@@ -8,9 +8,8 @@ use Illuminate\Filesystem\Filesystem;
 class InstallCommand extends Command
 {
     protected $signature = 'exception-notifier:install
-        {--framework= : Email layout: legacy, bootstrap5, or tailwind}
+        {--layout= : Email layout: legacy or modern}
         {--theme= : Email color scheme: light, dark, or system}
-        {--ui-kit : Use the installed Laravel UI Kit CSS framework and default theme}
         {--force : Replace the selected email view after saving a backup}';
 
     protected $description = 'Install exception email files without overwriting application configuration or mailers';
@@ -22,15 +21,15 @@ class InstallCommand extends Command
             return self::FAILURE;
         }
 
-        [$framework, $theme] = $selection;
+        [$layout, $theme] = $selection;
         $viewPath = resource_path('views/emails/exception.blade.php');
-        if ($framework !== null && $files->exists($viewPath) && ! $this->option('force')) {
+        if ($layout !== null && $files->exists($viewPath) && ! $this->option('force')) {
             $this->error('The email view already exists. Use --force to replace it with a backup.');
 
             return self::FAILURE;
         }
 
-        if (! $this->publishMissingFiles($files) || ! $this->publishView($files, $viewPath, $framework, $theme)) {
+        if (! $this->publishMissingFiles($files) || ! $this->publishView($files, $viewPath, $layout, $theme)) {
             return self::FAILURE;
         }
 
@@ -42,33 +41,16 @@ class InstallCommand extends Command
 
     private function selectLayout(): ?array
     {
-        $framework = $this->option('framework');
+        $layout = $this->option('layout');
         $theme = $this->option('theme');
 
-        if ($this->option('ui-kit')) {
-            if ($framework !== null) {
-                $this->error('Use either --ui-kit or --framework.');
-
-                return null;
-            }
-
-            $framework = config('ui-kit.css_framework');
-            if (! in_array($framework, ['bootstrap5', 'tailwind'], true)) {
-                $this->error('Configure Laravel UI Kit with bootstrap5 or tailwind before using --ui-kit.');
-
-                return null;
-            }
-            $theme = $theme ?? (config('ui-kit.dark_mode.enabled', true)
-                ? config('ui-kit.dark_mode.default', 'system') : 'light');
+        if ($layout === null && $this->input->isInteractive()) {
+            $layout = $this->choice('Email layout', ['keep', 'legacy', 'modern'], 'keep');
+            $layout = $layout === 'keep' ? null : $layout;
         }
 
-        if ($framework === null && $this->input->isInteractive()) {
-            $framework = $this->choice('Email layout', ['keep', 'legacy', 'bootstrap5', 'tailwind'], 'keep');
-            $framework = $framework === 'keep' ? null : $framework;
-        }
-
-        if ($framework !== null && ! in_array($framework, ['legacy', 'bootstrap5', 'tailwind'], true)) {
-            $this->error('Choose legacy, bootstrap5, or tailwind.');
+        if ($layout !== null && ! in_array($layout, ['legacy', 'modern'], true)) {
+            $this->error('Choose legacy or modern.');
 
             return null;
         }
@@ -79,17 +61,17 @@ class InstallCommand extends Command
             return null;
         }
 
-        if ($theme !== null && $framework === null) {
-            $this->error('Specify --framework when selecting a theme.');
+        if ($theme !== null && $layout === null) {
+            $this->error('Specify --layout when selecting a theme.');
 
             return null;
         }
 
-        if ($framework !== null && $theme === null && $this->input->isInteractive()) {
+        if ($layout !== null && $theme === null && $this->input->isInteractive()) {
             $theme = $this->choice('Email color scheme', ['light', 'dark', 'system'], 'light');
         }
 
-        return [$framework, $theme];
+        return [$layout, $theme];
     }
 
     private function publishMissingFiles(Filesystem $files): bool
@@ -117,9 +99,9 @@ class InstallCommand extends Command
         return true;
     }
 
-    private function publishView(Filesystem $files, string $path, ?string $framework, ?string $theme): bool
+    private function publishView(Filesystem $files, string $path, ?string $layout, ?string $theme): bool
     {
-        if ($framework === null && $files->exists($path)) {
+        if ($layout === null && $files->exists($path)) {
             $this->line('Kept '.$path);
 
             return true;
@@ -136,13 +118,13 @@ class InstallCommand extends Command
         }
 
         $theme = $theme ?? 'light';
-        $view = $framework === null || $framework === 'legacy' ? 'exception' : $framework;
-        $contents = $framework === null
+        $view = $layout === null || $layout === 'legacy' ? 'exception' : $layout;
+        $contents = $layout === null
             ? $files->get(dirname(__DIR__).'/resources/views/emails/exception.blade.php')
             : "@include('laravelexceptionnotifier::emails.{$view}', ['theme' => '{$theme}'])\n";
         $files->ensureDirectoryExists(dirname($path));
         $files->replace($path, $contents);
-        $this->info('Installed '.($framework ?? 'legacy').' email view.');
+        $this->info('Installed '.($layout ?? 'legacy').' email view.');
 
         return true;
     }

@@ -28,7 +28,7 @@ $content = [
     ],
 ];
 
-foreach (['exception', 'bootstrap5', 'tailwind'] as $layout) {
+foreach (['exception', 'modern'] as $layout) {
     foreach (['light', 'dark', 'system'] as $theme) {
         $html = $app['view']->make('laravelexceptionnotifier::emails.'.$layout, compact('content', 'theme'))->render();
         file_put_contents(dirname(__DIR__).'/build/previews/'.$layout.'-'.$theme.'.html', $html);
@@ -39,7 +39,7 @@ $content['message'] = str_repeat('LongExceptionMessage', 30);
 $content['file'] = '/'.str_repeat('long-path/', 45).'file.php';
 $content['url'] = 'https://example.com/'.str_repeat('long-url', 60);
 $content['trace'][0]['class'] = str_repeat('Namespace\\', 50).'Checkout';
-foreach (['exception', 'bootstrap5', 'tailwind'] as $layout) {
+foreach (['exception', 'modern'] as $layout) {
     file_put_contents(
         dirname(__DIR__).'/build/previews/'.$layout.'-long.html',
         $app['view']->make('laravelexceptionnotifier::emails.'.$layout, ['content' => $content])->render()

@@ -1,28 +1,41 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="art/banner-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="art/banner-light.svg">
-    <img alt="Laravel Exception Notifier" src="art/banner-light.svg" width="800">
-  </picture>
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="art/banner-dark.svg">
+        <source media="(prefers-color-scheme: light)" srcset="art/banner-light.svg">
+        <img src="art/banner-light.svg" alt="Laravel Exception Notifier" width="800">
+    </picture>
 </p>
 
-# Laravel Exception Notifier
+<p align="center">Send Laravel exception emails with the message, request URL, IP address, and stack trace.</p>
 
-Send Laravel exception emails with the message, request URL, IP address, and stack trace.
+<p align="center">
+    <a href="https://packagist.org/packages/jeremykenedy/laravel-exception-notifier"><img src="https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/jeremykenedy/laravel-exception-notifier"><img src="https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg" alt="Latest Stable Version"></a>
+    <a href="https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml"><img src="https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml/badge.svg" alt="Tests"></a>
+    <a href="https://github.styleci.io/repos/91833181"><img src="https://github.styleci.io/repos/91833181/shield?branch=master" alt="StyleCI"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
 
-[![Tests](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml/badge.svg)](https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml)
-[![Total Downloads](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
-[![Latest Stable Version](https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg)](https://packagist.org/packages/jeremykenedy/laravel-exception-notifier)
-[![Code Style](https://github.styleci.io/repos/91833181/shield?branch=master)](https://github.styleci.io/repos/91833181)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## Table of Contents
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/email-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/images/email-light.png">
-  <img alt="Exception email showing request details and a stack trace" src="docs/images/email-light.png" width="880">
-</picture>
+- [Laravel Support](#laravel-support)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Laravel 11 through 13](#laravel-11-through-13)
+- [Laravel 9 and 10, or an existing Handler class](#laravel-9-and-10-or-an-existing-handler-class)
+- [Features](#features)
+- [Configuration](#configuration)
+- [Changing Email Layouts](#changing-email-layouts)
+- [Dark Mode](#dark-mode)
+- [Custom Views](#custom-views)
+- [Artisan Commands](#artisan-commands)
+- [Install and Update Options](#install-and-update-options)
+- [Safe Updates](#safe-updates)
+- [Testing](#testing)
+- [License](#license)
 
-## Compatibility
+## Laravel Support
 
 The existing standalone Blade email remains the default. `composer update` does not publish files, switch layouts, modify application settings, or register an exception reporting callback. Existing customized mailers and views continue to work.
 
@@ -39,14 +52,21 @@ The current package retains its `^8.0` PHP constraint. Laravel determines the ap
 
 See [upgrading](docs/upgrading.md), [historical installation](docs/legacy-installation.md), and [compatibility decisions](docs/compatibility.md).
 
-## Install
+## Requirements
+
+- PHP and Laravel versions from the table above.
+- A configured Laravel mail transport and at least one recipient.
+
+Both email layouts render with self-contained styles. Applications do not need frontend assets or an npm build to send them.
+
+## Installation
 
 ```bash
 composer require jeremykenedy/laravel-exception-notifier
 php artisan exception-notifier:install
 ```
 
-Laravel discovers the provider automatically. The command offers the existing layout, Bootstrap 5, or Tailwind, followed by light, dark, or system theme. Choosing `keep` preserves the current view or installs the legacy view if none exists.
+Laravel discovers the provider automatically. The command detects existing files and preserves them. Choose `keep` to retain the current email or install the legacy view when none exists. An explicit selection offers the legacy or modern layout and a light, dark, or system theme.
 
 For unattended installation using the existing defaults:
 
@@ -66,7 +86,9 @@ Both approaches create these files when missing:
 - `resources/views/emails/exception.blade.php`
 - `config/exceptions.php`
 
-Configure your application's mail transport, then set the notification recipients:
+## Quick Start
+
+Configure your application's mail transport, then set the recipients in `.env`:
 
 ```dotenv
 EMAIL_EXCEPTION_ENABLED=true
@@ -78,11 +100,10 @@ EMAIL_EXCEPTION_SUBJECT="Production exception"
 EMAIL_EXCEPTION_THEME=light
 ```
 
-If no subject is supplied, the default is `Error on ` followed by the application environment. The package does not send a test message during installation.
-
-## Register exception reporting
+Register exception reporting using the instructions for your Laravel application below. Installation does not send a test message or register the callback automatically.
 
 ### Laravel 11 through 13
+
 
 Add a report callback to your existing `withExceptions` block in `bootstrap/app.php`:
 
@@ -92,7 +113,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-// In the existing application builder chain:
 ->withExceptions(function (Exceptions $exceptions): void {
     $exceptions->report(function (\Throwable $exception): void {
         if (! config('exceptions.emailExceptionEnabled')) {
@@ -124,66 +144,106 @@ In `app/Exceptions/Handler.php`, register the same callback with `$this->reporta
 
 The trait source is available at `src/App/Traits/ExceptionNotificationHandlerTrait.php` for applications that already copy it. It is not automatically loaded into the application's `App` namespace or installed over an existing Handler.
 
-## Layouts and dark mode
+## Features
 
-| Option | View | Behavior |
+- Exception messages, request details, and stack traces in email.
+- Multiple recipients with optional CC and BCC.
+- Original and modern Blade email layouts.
+- Light, dark, and system themes.
+- Safe installation and layout updates with view backups.
+- Custom mailers, views, and existing configuration remain application-owned.
+
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/email-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/images/email-light.png">
+    <img alt="Modern exception email showing request details and a stack trace" src="docs/images/email-light.png" width="880">
+</picture>
+
+## Configuration
+
+Settings live in `config/exceptions.php`. Existing keys and defaults are preserved.
+
+| Key | Environment variable | Default / purpose |
 | --- | --- | --- |
-| `legacy` | Original standalone Blade template | Default layout, with mobile wrapping fixes and optional dark mode |
-| `bootstrap5` | Blade with Bootstrap 5 classes | Modern email layout with inline styles |
-| `tailwind` | Blade with Tailwind utility classes | Same email content and layout with inline styles |
+| `emailExceptionEnabled` | `EMAIL_EXCEPTION_ENABLED` | `true`; enables reporting |
+| `emailExceptionFrom` | `EMAIL_EXCEPTION_FROM` | Optional sender; otherwise Laravel's configured sender |
+| `emailExceptionsTo` | `EMAIL_EXCEPTION_TO` | Comma-separated recipient addresses |
+| `emailExceptionCCto` | `EMAIL_EXCEPTION_CC` | Optional comma-separated CC addresses |
+| `emailExceptionBCCto` | `EMAIL_EXCEPTION_BCC` | Optional comma-separated BCC addresses |
+| `emailExceptionSubject` | `EMAIL_EXCEPTION_SUBJECT` | `Error on ` followed by the application environment |
+| `emailExceptionView` | None | `emails.exception` |
+| `emailExceptionTheme` | `EMAIL_EXCEPTION_THEME` | `light`; also accepts `dark` or `system` |
 
-All three render without npm, a CDN, JavaScript, or external fonts. The optional layouts use a shared template so their content and escaping stay consistent. They are email templates, not an admin dashboard or frontend scaffold. Browser framework classes are included for customization; the email appearance does not require a full framework stylesheet.
+## Changing Email Layouts
+
+Run the update command for an interactive layout selection:
 
 ```bash
-# Select a layout during installation.
-php artisan exception-notifier:install --framework=bootstrap5 --theme=system
-
-# Explicitly replace an existing view, saving a backup first.
-php artisan exception-notifier:update --framework=tailwind --theme=dark --force
-
-# Return to the original layout.
-php artisan exception-notifier:update --framework=legacy --theme=light --force
+php artisan exception-notifier:update
 ```
 
-`light` stays light, `dark` renders dark colors directly, and `system` follows `prefers-color-scheme` where the email client supports it. Email clients can override colors, and clients without media query support use the light fallback for `system`.
+Existing views require `--force` for an explicit replacement. The command saves a unique adjacent `.bak` copy before changing the view. Configuration and mailer files are preserved.
 
-A selected theme is saved in the generated view wrapper. For a view that follows configuration instead, use:
+```bash
+php artisan exception-notifier:update --layout=modern --theme=system --force
+php artisan view:clear
+```
+
+To restore the original layout:
+
+```bash
+php artisan exception-notifier:update --layout=legacy --theme=light --force
+php artisan view:clear
+```
+
+| Layout | View | Behavior |
+| --- | --- | --- |
+| `legacy` | `laravelexceptionnotifier::emails.exception` | Original appearance, mobile wrapping fixes, optional dark mode |
+| `modern` | `laravelexceptionnotifier::emails.modern` | Responsive request details and stack trace with inline email styles |
+
+### Dark Mode
+
+`light` stays light, `dark` renders dark colors directly, and `system` follows `prefers-color-scheme` where the email client supports it. Email clients can override colors. Clients without media query support use the light fallback for `system`.
+
+An explicit theme selection is saved in the installed view wrapper. To follow configuration instead, use this in your email view:
 
 ```blade
-@include('laravelexceptionnotifier::emails.tailwind')
+@include('laravelexceptionnotifier::emails.modern')
 ```
 
 Then set `emailExceptionTheme` in `config/exceptions.php` to `env('EMAIL_EXCEPTION_THEME', 'light')`. Older published config files need this entry added manually.
 
-### Custom views
+### Custom Views
 
-`exceptions.emailExceptionView` continues to select the mailable's view. Set it to your own Blade view or a package view such as `laravelexceptionnotifier::emails.bootstrap5`. The `$content` array is unchanged. The commands only manage `resources/views/emails/exception.blade.php`; a custom view setting takes precedence and is never rewritten.
+`exceptions.emailExceptionView` continues to select the mailable's view. Set it to your own Blade view or `laravelexceptionnotifier::emails.modern`. The `$content` array is unchanged. The commands only manage `resources/views/emails/exception.blade.php`; a custom view setting takes precedence and is never rewritten.
 
-Laravel's standard namespaced overrides under `resources/views/vendor/laravelexceptionnotifier/emails/` also work.
+Laravel's standard namespaced overrides under `resources/views/vendor/laravelexceptionnotifier/emails/` also work. Exception values are escaped, and the included templates omit request bodies and stack arguments.
 
-### Optional Laravel UI Kit
+## Artisan Commands
 
-If your application already uses [Laravel UI Kit](https://github.com/jeremykenedy/laravel-ui-kit), the commands can read its configured CSS framework and default theme:
+| Command | Description | Flags |
+| --- | --- | --- |
+| `exception-notifier:install` | Create missing files and optionally select an email layout/theme | `--layout`, `--theme`, `--force`, `--no-interaction` |
+| `exception-notifier:update` | Restore missing files or explicitly replace the email view with a backup | `--layout`, `--theme`, `--force`, `--no-interaction` |
+| `vendor:publish --tag=laravelexceptionnotifier` | Original Laravel publishing command | Laravel's standard publish options |
 
-```bash
-php artisan exception-notifier:install --ui-kit
-php artisan exception-notifier:update --ui-kit --force
-```
+### Install and Update Options
 
-This selects `bootstrap5` or `tailwind` using `ui-kit.css_framework` and reads `ui-kit.dark_mode.enabled` and `ui-kit.dark_mode.default`. `--theme` can override the imported theme. An absent configuration or unsupported framework fails before writing files. Do not combine `--ui-kit` and `--framework`.
+| Flag | Values | Description |
+| --- | --- | --- |
+| `--layout=` | `legacy`, `modern` | Select an email layout |
+| `--theme=` | `light`, `dark`, `system` | Select a theme; requires a layout selection |
+| `--force` | Flag | Allow replacement of the selected view after a successful backup |
+| `--no-interaction` | Flag | Skip prompts; keep existing files when no layout is selected |
 
-The selection is copied when the command runs. Later UI Kit changes do not silently switch your emails. UI Kit is optional, has its own Laravel/PHP requirements, and is neither installed nor modified by these commands. Email views do not use its interactive components.
-
-[Laravel Toast](https://github.com/jeremykenedy/laravel-toast), [Laravel Darkmode Toggle](https://github.com/jeremykenedy/laravel-darkmode-toggle), [Laravel IP Capture](https://github.com/jeremykenedy/laravel-ip-capture), and [Laravel Seedster](https://github.com/jeremykenedy/laravel-seedster) are not required. This package has no browser interactions or database records that need those integrations. The request IP comes from Laravel's request object.
-
-## Safe updates
+## Safe Updates
 
 ```bash
 composer update jeremykenedy/laravel-exception-notifier
 php artisan exception-notifier:update --no-interaction
 ```
 
-The update command restores missing files and preserves existing files. Even `--force` alone does not reset a view. A replacement requires `--framework` or `--ui-kit` plus `--force`; the previous view is saved beside it with a unique `.bak` suffix. Configuration and mailer files are never overwritten by these commands.
+The update command restores missing files and preserves existing files. Even `--force` alone does not reset a view. A replacement requires a layout selection plus `--force`. Configuration and mailer files are never overwritten by these commands.
 
 After changing views or configuration, use your normal deployment cache workflow, for example:
 
@@ -207,10 +267,10 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-PHPUnit covers publishing, configuration, recipients, actual rendering and in-memory mail delivery, throwable reporting, delivery failures, escaping, themes, and command upgrades. Browser tests cover mobile and desktop rendering, long text, system theme changes, and accessibility of the modern layouts. Tests use generated sample data and do not send external mail.
+PHPUnit covers publishing, configuration, recipients, rendering and in-memory mail delivery, throwable reporting, delivery failures, escaping, themes, and command upgrades. Browser tests cover mobile and desktop rendering, long text, system theme changes, and accessibility of the modern layout. Tests use generated sample data and do not send external mail.
 
-CI tests Laravel 9 through 13 on their supported PHP combinations, plus the lowest dependencies on PHP 8.0. Browser tests, lint, audits, and a coverage report run on the current stack. See [testing details](docs/testing.md).
+CI tests Laravel 9 through 13 on their supported PHP combinations, plus the lowest dependencies on PHP 8.0 and a pinned Laravel 9.20 mail-delivery regression. Browser tests, lint, audits, and a coverage report run on the current stack. Node and npm are development tools for browser testing only. See [testing details](docs/testing.md).
 
 ## License
 
-Copyright (c) 2017-2026 Jeremy Kenedy. Released under the [MIT license](LICENSE).
+This package is open-sourced software licensed under the [MIT license](LICENSE).
