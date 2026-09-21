@@ -50,6 +50,6 @@ A separate lowest-dependency run covers Laravel 9 on PHP 8.0. A pinned Laravel 9
 
 Actions have read-only repository permissions, pinned revisions, concurrency cancellation, and timeouts. Dependabot checks development dependencies and action revisions monthly.
 
-Scrutinizer explicitly uses PHP 8.3.12 and Composer dependencies, runs the PHP suite and Pint, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. The explicit patch version selects an available runtime archive from Scrutinizer's mirror.
+Scrutinizer explicitly uses PHP 8.3.12 and Composer dependencies, runs the PHP suite and Pint, and analyzes package PHP with vendor code available as dependencies. Blade and browser tests run in GitHub Actions. The explicit patch version selects an available runtime archive from Scrutinizer's mirror. Scrutinizer fails the build for any reported issue or any class or method rated below A.
 
 The analysis node overrides the website's historical PHP_CodeSniffer 2.9 installation hook. Pint provides the Laravel style checks without adding an obsolete dependency.

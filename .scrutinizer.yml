@@ -18,13 +18,15 @@ build:
 checks:
   php: true
 
+build_failure_conditions:
+  - 'elements.rating(<= B).exists'
+  - 'issues.exists'
+
 coding_style:
   php:
     spaces:
       before_parentheses:
         closure_definition: true
-      around_operators:
-        negation: true
 
 filter:
   excluded_paths:

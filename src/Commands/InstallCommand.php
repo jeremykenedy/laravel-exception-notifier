@@ -3,7 +3,8 @@
 namespace jeremykenedy\laravelexceptionnotifier\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
+use jeremykenedy\laravelexceptionnotifier\Support\EmailFiles;
+use RuntimeException;
 
 class InstallCommand extends Command
 {
@@ -14,15 +15,24 @@ class InstallCommand extends Command
 
     protected $description = 'Install exception email files without overwriting application configuration or mailers';
 
-    public function handle(Filesystem $files): int
+    public function handle(EmailFiles $files): int
     {
         $selection = $this->selectLayout();
         if ($selection === null) {
             return self::FAILURE;
         }
 
-        if (! $this->installFiles($files, ...$selection)) {
+        try {
+            [$layout, $theme] = $selection;
+            $messages = $files->install($layout, $theme, (bool) $this->option('force'));
+        } catch (RuntimeException $exception) {
+            $this->error($exception->getMessage());
+
             return self::FAILURE;
+        }
+
+        foreach ($messages as $message) {
+            $this->info($message);
         }
 
         $this->info('Configure your mail recipients and exception reporting callback as described in the README.');
@@ -85,124 +95,5 @@ class InstallCommand extends Command
         }
 
         return $theme;
-    }
-
-    private function installFiles(Filesystem $files, ?string $layout, ?string $theme): bool
-    {
-        $path = resource_path('views/emails/exception.blade.php');
-        if (! $this->canPublishView($files, $path, $layout)) {
-            return false;
-        }
-
-        if (! $this->backupView($files, $path, $layout)) {
-            return false;
-        }
-
-        return $this->publishMissingFiles($files) && $this->publishView($files, $path, $layout, $theme);
-    }
-
-    private function canPublishView(Filesystem $files, string $path, ?string $layout): bool
-    {
-        if ($layout === null || ! $files->exists($path) || $this->option('force')) {
-            return true;
-        }
-
-        $this->error('The email view already exists. Use --force to replace it with a backup.');
-
-        return false;
-    }
-
-    private function backupView(Filesystem $files, string $path, ?string $layout): bool
-    {
-        if ($layout === null || ! $files->exists($path)) {
-            return true;
-        }
-
-        $backup = $path.'.'.date('YmdHis').'.'.bin2hex(random_bytes(4)).'.bak';
-        if (! $files->copy($path, $backup)) {
-            $this->error('Unable to back up the email view. No view changes were made.');
-
-            return false;
-        }
-        $this->info('Backup saved to '.$backup);
-
-        return true;
-    }
-
-    private function publishMissingFiles(Filesystem $files): bool
-    {
-        $source = dirname(__DIR__);
-        foreach ([
-            $source.'/App/Mail/ExceptionOccurred.php' => app_path('Mail/ExceptionOccurred.php'),
-            $source.'/config/exceptions.php'          => config_path('exceptions.php'),
-        ] as $from => $to) {
-            if ($files->exists($to)) {
-                $this->line('Kept '.$to);
-
-                continue;
-            }
-
-            $files->ensureDirectoryExists(dirname($to));
-            if (! $files->copy($from, $to)) {
-                $this->error('Unable to write '.$to);
-
-                return false;
-            }
-            $this->info('Created '.$to);
-        }
-
-        return true;
-    }
-
-    private function publishView(Filesystem $files, string $path, ?string $layout, ?string $theme): bool
-    {
-        if ($layout === null && $files->exists($path)) {
-            $this->line('Kept '.$path);
-
-            return true;
-        }
-
-        $contents = $this->viewContents($files, $layout, $theme);
-        $files->ensureDirectoryExists(dirname($path));
-        if (! $this->writeView($files, $path, $contents)) {
-            return false;
-        }
-        $this->info('Installed '.($layout ?? 'legacy').' email view.');
-
-        return true;
-    }
-
-    private function viewContents(Filesystem $files, ?string $layout, ?string $theme): string
-    {
-        if ($layout === null) {
-            return $files->get(dirname(__DIR__).'/resources/views/emails/exception.blade.php');
-        }
-
-        $theme = $theme ?? 'light';
-        $view = $layout === 'legacy' ? 'exception' : $layout;
-
-        return "@include('laravelexceptionnotifier::emails.{$view}', ['theme' => '{$theme}'])\n";
-    }
-
-    private function writeView(Filesystem $files, string $path, string $contents): bool
-    {
-        $temporary = $path.'.'.bin2hex(random_bytes(8)).'.tmp';
-        try {
-            if ($files->put($temporary, $contents) !== strlen($contents)) {
-                $this->error('Unable to write the email view. The original view was preserved.');
-
-                return false;
-            }
-
-            if (! $files->move($temporary, $path)) {
-                $this->error('Unable to replace the email view. The original view was preserved.');
-
-                return false;
-            }
-
-            return true;
-        } finally {
-            $files->delete($temporary);
-        }
     }
 }
