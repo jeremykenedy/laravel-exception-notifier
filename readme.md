@@ -9,6 +9,9 @@
 <p align="center">Send Laravel exception emails with the message, request URL, IP address, and stack trace.</p>
 
 <p align="center">
+    <a href="https://github.com/jeremykenedy"><img src="https://img.shields.io/github/followers/jeremykenedy?label=Follow&amp;style=social" alt="Follow @jeremykenedy"></a>
+    <a href="https://github.com/jeremykenedy/laravel-exception-notifier/stargazers"><img src="https://img.shields.io/github/stars/jeremykenedy/laravel-exception-notifier?style=social" alt="Star laravel-exception-notifier on GitHub"></a>
+    <a href="https://github.com/sponsors/jeremykenedy"><img src="https://img.shields.io/static/v1?label=Sponsor&amp;message=%E2%9D%A4&amp;logo=GitHub&amp;color=%23fe8e86" alt="Sponsor me on GitHub"></a>
     <a href="https://packagist.org/packages/jeremykenedy/laravel-exception-notifier"><img src="https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/d/total.svg" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/jeremykenedy/laravel-exception-notifier"><img src="https://poser.pugx.org/jeremykenedy/laravel-exception-notifier/v/stable.svg" alt="Latest Stable Version"></a>
     <a href="https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml"><img src="https://github.com/jeremykenedy/laravel-exception-notifier/actions/workflows/ci.yml/badge.svg" alt="Tests"></a>
